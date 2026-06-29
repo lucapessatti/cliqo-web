@@ -1,0 +1,47 @@
+---
+import Logo from "./Logo.astro";
+
+const cols = [
+  {
+    title: "Servicios",
+    links: ["SEO local", "Diseño web", "Digitalización", "Publicidad"],
+  },
+  {
+    title: "Empresa",
+    links: ["Cómo trabajamos", "Lo que hacemos", "Precios", "Contacto"],
+  },
+];
+---
+
+<footer class="bg-ink py-14 text-white">
+  <div class="mx-auto max-w-7xl px-6">
+    <div class="grid gap-10 md:grid-cols-4">
+      <div class="md:col-span-2">
+        <Logo light />
+        <p class="mt-4 max-w-xs text-sm text-white/60">
+          Agencia de marketing digital para comercios locales de Torrent y
+          Valencia. Hacemos que te encuentren.
+        </p>
+      </div>
+      {
+        cols.map((col) => (
+          <div>
+            <h3 class="text-sm font-semibold text-white">{col.title}</h3>
+            <ul class="mt-4 space-y-2">
+              {col.links.map((l) => (
+                <li>
+                  <a href="#" class="text-sm text-white/60 transition-colors hover:text-white">{l}</a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-6 sm:flex-row">
+      <p class="text-sm text-white/50">© 2026 Cliqo · Torrent, Valencia</p>
+      <p class="text-sm text-white/50">Hecho con ☕ en Torrent</p>
+    </div>
+  </div>
+</footer>
