@@ -1,0 +1,116 @@
+---
+// Popup de contacto. Se abre desde cualquier botón con [data-contact-modal].
+// La sección de contacto del pie sigue existiendo para quien prefiera hacer scroll.
+---
+
+<div
+  id="contact-modal"
+  class="fixed inset-0 z-[100] hidden items-center justify-center p-4"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="cm-title"
+>
+  <div class="modal-backdrop absolute inset-0 bg-black/50 opacity-0 transition-opacity duration-200"></div>
+
+  <div
+    class="modal-panel relative max-h-[90vh] w-full max-w-md translate-y-3 scale-95 overflow-y-auto rounded-2xl bg-white p-7 opacity-0 shadow-2xl transition-all duration-200 sm:p-8"
+  >
+    <button
+      type="button"
+      class="modal-close absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+      aria-label="Cerrar"
+    >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
+        <path d="M18 6 6 18M6 6l12 12" />
+      </svg>
+    </button>
+
+    <span class="inline-flex items-center gap-2 rounded-full bg-brand-50 px-3 py-1 text-xs font-semibold text-brand-700">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" /></svg>
+      Respuesta en 24h
+    </span>
+
+    <h2 id="cm-title" class="mt-4 text-2xl font-extrabold text-ink">Pide tu auditoría gratis</h2>
+    <p class="mt-1 text-sm text-slate-500">
+      Cuéntanos sobre tu negocio y te decimos cómo conseguir más clientes. Sin coste ni compromiso.
+    </p>
+
+    <form
+      class="mt-5 space-y-4"
+      action="https://formsubmit.co/hola@cliqo.es"
+      method="POST"
+    >
+      <div>
+        <label for="cm-nombre" class="block text-sm font-medium text-ink">Nombre</label>
+        <input id="cm-nombre" name="nombre" type="text" required
+          class="mt-1.5 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition-colors focus:border-brand-600 focus:ring-2 focus:ring-brand-100" />
+      </div>
+      <div>
+        <label for="cm-negocio" class="block text-sm font-medium text-ink">Tu negocio</label>
+        <input id="cm-negocio" name="negocio" type="text" required
+          class="mt-1.5 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition-colors focus:border-brand-600 focus:ring-2 focus:ring-brand-100" />
+      </div>
+      <div>
+        <label for="cm-email" class="block text-sm font-medium text-ink">Email</label>
+        <input id="cm-email" name="email" type="email" required
+          class="mt-1.5 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition-colors focus:border-brand-600 focus:ring-2 focus:ring-brand-100" />
+      </div>
+      <div>
+        <label for="cm-mensaje" class="block text-sm font-medium text-ink">¿Qué necesitas?</label>
+        <textarea id="cm-mensaje" name="mensaje" rows="3"
+          class="mt-1.5 w-full rounded-xl border border-slate-300 px-4 py-3 text-sm outline-none transition-colors focus:border-brand-600 focus:ring-2 focus:ring-brand-100"></textarea>
+      </div>
+      <button type="submit"
+        class="w-full rounded-xl bg-brand-600 px-5 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700">
+        Enviar y pedir auditoría
+      </button>
+      <p class="text-center text-xs text-slate-400">Te respondemos en menos de 24 horas.</p>
+    </form>
+  </div>
+</div>
+
+<script>
+  const modal = document.getElementById("contact-modal");
+  if (modal) {
+    const panel = modal.querySelector(".modal-panel");
+    const backdrop = modal.querySelector(".modal-backdrop");
+    const shownPanel = ["opacity-100", "translate-y-0", "scale-100"];
+    const hiddenPanel = ["opacity-0", "translate-y-3", "scale-95"];
+    let lastFocused = null;
+
+    const open = (e) => {
+      if (e) e.preventDefault();
+      lastFocused = document.activeElement;
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+      document.body.style.overflow = "hidden";
+      requestAnimationFrame(() => {
+        backdrop.classList.add("opacity-100");
+        panel.classList.remove(...hiddenPanel);
+        panel.classList.add(...shownPanel);
+      });
+      setTimeout(() => modal.querySelector("input")?.focus(), 80);
+    };
+
+    const close = () => {
+      backdrop.classList.remove("opacity-100");
+      panel.classList.add(...hiddenPanel);
+      panel.classList.remove(...shownPanel);
+      document.body.style.overflow = "";
+      setTimeout(() => {
+        modal.classList.add("hidden");
+        modal.classList.remove("flex");
+      }, 200);
+      if (lastFocused && lastFocused.focus) lastFocused.focus();
+    };
+
+    document.querySelectorAll("[data-contact-modal]").forEach((btn) =>
+      btn.addEventListener("click", open)
+    );
+    modal.querySelector(".modal-close")?.addEventListener("click", close);
+    backdrop?.addEventListener("click", close);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !modal.classList.contains("hidden")) close();
+    });
+  }
+</script>
