@@ -1,73 +1,156 @@
 ---
-import HeroVisual from "./HeroVisual.astro";
-import HeroMockup from "./HeroMockup.astro";
-import Marquee from "./Marquee.astro";
+// Hero con efecto glassmorphism, adaptado del componente React a Astro.
+// Mantiene la identidad de marca (verde esmeralda) sobre un fondo oscuro
+// para que el cristal contraste. Contenido honesto y local (sin logos
+// falsos ni estadísticas inventadas), para no parecer una agencia de IA más.
+const sectores = [
+  "Restaurantes",
+  "Peluquerías",
+  "Clínicas",
+  "Talleres",
+  "Tiendas",
+  "Cafeterías",
+  "Autoescuelas",
+  "Fisioterapia",
+];
+const loop = [...sectores, ...sectores];
 ---
 
-<section
-  class="relative min-h-dvh overflow-hidden bg-gradient-to-br from-brand-600 via-brand-500 to-brand-300"
->
-  <div class="absolute inset-0 bg-[radial-gradient(120%_120%_at_85%_30%,rgba(219,234,254,0.55),transparent_55%)]"></div>
-  <div class="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-brand-700/40 to-transparent"></div>
-
-  <HeroVisual />
-
-  <div class="relative z-10 mx-auto grid min-h-dvh max-w-7xl items-center gap-12 px-6 pb-24 pt-32 lg:grid-cols-2">
-    <div>
-      <span class="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" aria-hidden="true">
-          <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" />
-        </svg>
-        Sin compromiso · Sin permanencia
-      </span>
-
-      <h1 class="mt-6 text-5xl font-extrabold leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl">
-        Tu primer borrador
-        <span class="block">
-          de web en <span class="whitespace-nowrap">24 horas</span>
-        </span>
-      </h1>
-
-      <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/90 sm:text-xl">
-        Y además, <strong class="font-bold text-white">gratis</strong>. En un día tienes
-        el diseño de tu web sobre la mesa. Si te gusta, seguimos juntos. Si no, no
-        te cuesta nada. Así de simple.
-      </p>
-
-      <div class="mt-9 flex flex-wrap items-center gap-4">
-        <a
-          href="#contacto"
-          data-contact-modal
-          class="rounded-full bg-white px-8 py-4 text-base font-bold text-ink shadow-lg transition-transform hover:scale-105"
-        >
-          Quiero mi borrador gratis
-        </a>
-        <a
-          href="#servicios"
-          class="rounded-full border border-white/40 px-8 py-4 text-base font-semibold text-white transition-colors hover:bg-white/10"
-        >
-          Ver servicios
-        </a>
-      </div>
-
-      <div class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm text-white/80">
-        <span class="flex items-center gap-2">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
-          Entrega en 24 horas
-        </span>
-        <span class="flex items-center gap-2">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
-          Primer borrador 100% gratis
-        </span>
-        <span class="flex items-center gap-2">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
-          Hecho por profesionales
-        </span>
-      </div>
-    </div>
-
-    <HeroMockup />
+<section class="relative min-h-dvh overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-900 to-neutral-950 text-white">
+  <!-- Ambiente: orbes suaves con nuestro verde (lenguaje visual de la web) -->
+  <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+    <div class="absolute -right-40 -top-32 h-[42rem] w-[42rem] rounded-full bg-emerald-500/15 blur-3xl"></div>
+    <div class="absolute -left-40 top-1/3 h-[34rem] w-[34rem] rounded-full bg-emerald-600/10 blur-3xl"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(120%_120%_at_80%_20%,rgba(16,185,129,0.12),transparent_55%)]"></div>
   </div>
 
-  <Marquee />
+  <div class="relative z-10 mx-auto max-w-7xl px-6 pb-16 pt-32 md:pt-36">
+    <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8">
+      <!-- IZQUIERDA -->
+      <div class="space-y-7 lg:col-span-7">
+        <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-sm font-semibold text-white/80 backdrop-blur-md">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="#34d399" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" /></svg>
+          Sin compromiso · Sin permanencia
+        </span>
+
+        <h1 class="text-5xl font-extrabold leading-[0.9] tracking-tight sm:text-6xl lg:text-7xl">
+          Tu primer borrador
+          <span class="block bg-gradient-to-br from-white via-white to-emerald-300 bg-clip-text text-transparent">
+            de web en 24 horas
+          </span>
+        </h1>
+
+        <p class="max-w-xl text-lg leading-relaxed text-white/70">
+          Y además, <strong class="font-semibold text-white">gratis</strong>. En un día tienes el diseño
+          de tu web sobre la mesa. Si te gusta, seguimos juntos. Si no, no te cuesta nada.
+        </p>
+
+        <div class="flex flex-col gap-4 sm:flex-row">
+          <button
+            type="button"
+            data-contact-modal
+            class="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-bold text-emerald-950 transition-all hover:scale-[1.02] hover:bg-emerald-50 active:scale-[0.98]"
+          >
+            Quiero mi borrador gratis
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:translate-x-1" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+          </button>
+          <a
+            href="#servicios"
+            class="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-8 py-4 text-sm font-semibold text-white backdrop-blur-md transition-colors hover:border-white/25 hover:bg-white/10"
+          >
+            Ver servicios
+          </a>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-x-8 gap-y-3 pt-2 text-sm text-white/70">
+          {
+            ["Entrega en 24 horas", "Primer borrador 100% gratis", "Hecho por profesionales"].map((t) => (
+              <span class="flex items-center gap-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+                {t}
+              </span>
+            ))
+          }
+        </div>
+      </div>
+
+      <!-- DERECHA: tarjetas de cristal -->
+      <div class="space-y-6 lg:col-span-5 lg:mt-8">
+        <!-- Tarjeta 1: la oferta -->
+        <div class="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl">
+          <div class="pointer-events-none absolute -mr-16 -mt-16 right-0 top-0 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl"></div>
+          <div class="relative z-10">
+            <div class="mb-7 flex items-center gap-4">
+              <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/20">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="#34d399" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" /></svg>
+              </div>
+              <div>
+                <div class="text-3xl font-bold tracking-tight">149€<span class="text-lg font-medium text-white/60">/mes</span></div>
+                <div class="text-sm text-white/50">Plan Crecimiento · sin permanencia</div>
+              </div>
+            </div>
+
+            <div class="mb-6 space-y-3">
+              {
+                ["Web profesional a medida", "Apareces el primero en Google", "Informe de resultados cada mes"].map((f) => (
+                  <div class="flex items-center gap-2.5 text-sm text-white/80">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+                    {f}
+                  </div>
+                ))
+              }
+            </div>
+
+            <div class="mb-6 h-px w-full bg-white/10"></div>
+
+            <div class="grid grid-cols-3 gap-2 text-center">
+              <div class="flex flex-col">
+                <span class="text-lg font-bold sm:text-xl">24h</span>
+                <span class="text-[10px] font-medium uppercase tracking-wider text-white/40 sm:text-xs">Entrega</span>
+              </div>
+              <div class="flex flex-col border-x border-white/10">
+                <span class="text-lg font-bold sm:text-xl">0€</span>
+                <span class="text-[10px] font-medium uppercase tracking-wider text-white/40 sm:text-xs">Borrador</span>
+              </div>
+              <div class="flex flex-col">
+                <span class="text-lg font-bold sm:text-xl">Valencia</span>
+                <span class="text-[10px] font-medium uppercase tracking-wider text-white/40 sm:text-xs">Local</span>
+              </div>
+            </div>
+
+            <div class="mt-7 flex flex-wrap gap-2">
+              <div class="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-medium tracking-wide text-white/80">
+                <span class="relative flex h-2 w-2">
+                  <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+                </span>
+                DISPONIBLES
+              </div>
+              <div class="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-medium tracking-wide text-white/80">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+                SIN PERMANENCIA
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta 2: sectores (marquee) -->
+        <div class="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 py-7 backdrop-blur-xl">
+          <h3 class="mb-5 px-8 text-sm font-medium text-white/60">Pensado para comercios como el tuyo</h3>
+          <div class="relative flex overflow-hidden" style="mask-image:linear-gradient(to right,transparent,black 15%,black 85%,transparent);-webkit-mask-image:linear-gradient(to right,transparent,black 15%,black 85%,transparent)">
+            <div class="flex w-max animate-marquee gap-3 whitespace-nowrap px-4">
+              {
+                loop.map((s) => (
+                  <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/80">
+                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                    {s}
+                  </span>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>

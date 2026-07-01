@@ -44,11 +44,11 @@ const items = [
     </div>
 
     <div id="rail" class="mt-14 outline-none" tabindex="0" role="group" aria-roledescription="carrusel" aria-label="Proyectos de Cliqo">
-      <div id="rail-stage" class="relative mx-auto flex h-[380px] w-full max-w-6xl items-center justify-center select-none" style="perspective:1200px">
+      <div id="rail-stage" class="relative mx-auto flex h-[360px] w-full max-w-6xl items-center justify-center select-none md:h-[460px] lg:h-[520px]" style="perspective:1200px">
         {
           items.map((it) => (
             <div
-              class="rail-card absolute aspect-square w-[240px] overflow-hidden rounded-3xl border-t border-white/20 bg-neutral-900 shadow-2xl md:w-[300px]"
+              class="rail-card absolute aspect-square w-[240px] overflow-hidden rounded-3xl border-t border-white/20 bg-neutral-900 shadow-2xl md:w-[340px] lg:w-[400px]"
               style="transform-style:preserve-3d;will-change:transform,opacity,filter"
               data-title={it.title}
               data-meta={it.meta}
@@ -107,7 +107,10 @@ const items = [
 
     let active = 0;
     let step = 320;
-    const computeStep = () => { step = window.innerWidth < 768 ? 200 : 320; };
+    const computeStep = () => {
+      const w = window.innerWidth;
+      step = w < 768 ? 210 : w < 1024 ? 380 : 460;
+    };
 
     const signedOffset = (i) => {
       let raw = ((i - active) % count + count) % count;
