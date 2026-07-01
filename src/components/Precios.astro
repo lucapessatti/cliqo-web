@@ -1,27 +1,35 @@
 ---
+import PricingCard from "./PricingCard.astro";
+
 const planes = [
   {
-    name: "Presencia básica",
+    title: "Presencia básica",
+    tagline: "Para empezar a existir online",
+    overview:
+      "Landing page de 1 página, ficha de Google My Business y dominio con hosting el primer año.",
     price: "299€",
     period: "pago único",
-    desc: "Para empezar a existir en internet.",
-    features: ["Landing page de 1 página", "Ficha de Google My Business", "Dominio + hosting 1 año"],
+    img: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=80",
     featured: false,
   },
   {
-    name: "Crecimiento",
+    title: "Crecimiento",
+    tagline: "Lo que la mayoría de comercios necesita",
+    overview:
+      "Web completa (hasta 5 páginas), SEO local mensual, informe de resultados y soporte prioritario.",
     price: "149€",
     period: "/mes · sin permanencia",
-    desc: "Lo que la mayoría de comercios necesita.",
-    features: ["Web completa (hasta 5 páginas)", "SEO local mensual", "Informe mensual de resultados", "Soporte prioritario"],
+    img: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&w=800&q=80",
     featured: true,
   },
   {
-    name: "Digitalización completa",
+    title: "Digitalización completa",
+    tagline: "Para negocios que van a por todas",
+    overview:
+      "Todo lo de Crecimiento más dashboard con Power BI, gestión de redes sociales y campañas en Google Ads.",
     price: "299€",
     period: "/mes",
-    desc: "Para negocios que quieren ir a por todas.",
-    features: ["Todo lo del plan Crecimiento", "Dashboard con Power BI", "Gestión de redes sociales", "Campañas en Google Ads"],
+    img: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80",
     featured: false,
   },
 ];
@@ -39,42 +47,12 @@ const planes = [
       </p>
     </div>
 
-    <div class="mx-auto mt-14 grid max-w-5xl gap-7 lg:grid-cols-3">
-      {
-        planes.map((p) => (
-          <article
-            class={`relative flex flex-col rounded-2xl bg-white p-8 ${p.featured ? "ring-2 ring-brand-600 shadow-xl shadow-brand-900/10" : "border border-slate-200"}`}
-          >
-            {p.featured && (
-              <span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand-600 px-4 py-1 text-xs font-semibold text-white">
-                Recomendado
-              </span>
-            )}
-            <h3 class="text-lg font-bold text-ink">{p.name}</h3>
-            <p class="mt-1 text-sm text-slate-500">{p.desc}</p>
-            <div class="mt-5 flex items-baseline gap-1">
-              <span class="text-4xl font-extrabold text-ink">{p.price}</span>
-              <span class="text-sm text-slate-400">{p.period}</span>
-            </div>
-            <ul class="mt-6 flex-1 space-y-3">
-              {p.features.map((f) => (
-                <li class="flex items-start gap-2 text-sm text-slate-700">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="mt-0.5 shrink-0" aria-hidden="true">
-                    <path d="M20 6 9 17l-5-5" />
-                  </svg>
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <a
-              href="#contacto"
-              class={`mt-8 rounded-xl px-5 py-3.5 text-center text-sm font-semibold transition-colors ${p.featured ? "bg-brand-600 text-white hover:bg-brand-700" : "border border-slate-300 text-ink hover:border-brand-600 hover:bg-brand-50"}`}
-            >
-              Empezar ahora
-            </a>
-          </article>
-        ))
-      }
+    <div class="mx-auto mt-14 grid max-w-6xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {planes.map((p) => <PricingCard {...p} />)}
     </div>
+
+    <p class="mt-8 text-center text-sm text-slate-500">
+      ¿No sabes cuál encaja contigo? Pídenos tu <strong class="text-ink">auditoría gratis</strong> y te lo decimos.
+    </p>
   </div>
 </section>

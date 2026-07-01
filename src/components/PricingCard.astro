@@ -1,0 +1,79 @@
+---
+// Tarjeta de precio estilo "reveal" (adaptada del componente React/shadcn a Astro).
+// Imagen de fondo + zoom al hover + detalles que se deslizan. En móvil todo
+// visible (sin depender del hover); en escritorio se mantiene el efecto reveal.
+interface Props {
+  title: string;
+  tagline: string;
+  overview: string;
+  price: string;
+  period: string;
+  img: string;
+  featured?: boolean;
+}
+const { title, tagline, overview, price, period, img, featured = false } = Astro.props;
+---
+
+<article
+  class={`group relative h-[28rem] w-full overflow-hidden rounded-2xl border shadow-lg transition-all duration-300 ease-in-out hover:-translate-y-2 hover:shadow-2xl ${featured ? "border-brand-500 ring-2 ring-brand-500" : "border-slate-200"}`}
+>
+  <img
+    src={img}
+    alt={title}
+    loading="lazy"
+    class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-in-out group-hover:scale-110"
+  />
+  <div class="absolute inset-0 bg-gradient-to-t from-brand-900/90 via-brand-900/55 to-black/20"></div>
+
+  {
+    featured && (
+      <span class="absolute right-4 top-4 z-10 rounded-full bg-white px-3 py-1 text-xs font-semibold text-brand-700 shadow">
+        Recomendado
+      </span>
+    )
+  }
+
+  <div class="relative flex h-full flex-col justify-between p-6 text-white">
+    <div class="flex h-24 items-start">
+      <div class="flex h-12 w-12 items-center justify-center rounded-full border-2 border-white/50 bg-white/10 backdrop-blur-sm">
+        <svg width="22" height="22" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+          <circle cx="16" cy="16" r="12" stroke="white" stroke-width="2" />
+          <circle cx="16" cy="16" r="6.5" stroke="white" stroke-width="2" />
+          <circle cx="16" cy="16" r="2.8" fill="white" />
+        </svg>
+      </div>
+    </div>
+
+    <div class="space-y-3 transition-transform duration-500 ease-in-out lg:group-hover:-translate-y-16">
+      <div>
+        <h3 class="text-2xl font-extrabold text-white">{title}</h3>
+        <p class="text-sm text-white/80">{tagline}</p>
+      </div>
+      <div>
+        <h4 class="text-xs font-semibold uppercase tracking-wide text-white/90">Qué incluye</h4>
+        <p class="mt-1 text-sm leading-relaxed text-white/75">{overview}</p>
+      </div>
+    </div>
+
+    <div
+      class="w-full pt-5 transition-all duration-500 ease-in-out lg:absolute lg:inset-x-0 lg:bottom-0 lg:translate-y-full lg:p-6 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100"
+    >
+      <div class="flex items-end justify-between gap-3">
+        <div>
+          <span class="text-3xl font-extrabold text-white">{price}</span>
+          <span class="text-sm text-white/80"> {period}</span>
+        </div>
+        <button
+          type="button"
+          data-contact-modal
+          class="inline-flex shrink-0 items-center gap-2 rounded-lg bg-white px-5 py-2.5 text-sm font-semibold text-ink transition-transform hover:scale-105"
+        >
+          Empezar
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</article>
