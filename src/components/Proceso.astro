@@ -1,0 +1,51 @@
+---
+const pasos = [
+  {
+    n: "01",
+    title: "Auditoría gratuita",
+    desc: "Analizamos tu presencia online actual: web, Google, reseñas y competencia. Te decimos exactamente qué falla y qué oportunidades tienes. Sin coste ni compromiso.",
+  },
+  {
+    n: "02",
+    title: "Estrategia a medida",
+    desc: "Diseñamos un plan adaptado a tu negocio y a tu presupuesto. Nada de paquetes genéricos: lo que tu comercio necesita de verdad.",
+  },
+  {
+    n: "03",
+    title: "Ejecución",
+    desc: "Creamos tu web, optimizamos tu SEO y ponemos todo en marcha. En 2 semanas empiezas a notar la diferencia.",
+  },
+  {
+    n: "04",
+    title: "Informe y mejora",
+    desc: "Cada mes recibes un informe claro con resultados reales. Seguimos optimizando para que crezcas mes a mes.",
+  },
+];
+---
+
+<section id="proceso" class="bg-slate-50 py-24">
+  <div class="mx-auto max-w-7xl px-6">
+    <div class="max-w-2xl">
+      <span class="text-sm font-semibold uppercase tracking-wide text-brand-600">Cómo trabajamos</span>
+      <h2 class="mt-3 text-4xl font-extrabold tracking-tight text-ink sm:text-5xl">
+        Simple, claro y sin sorpresas
+      </h2>
+      <p class="mt-4 text-lg text-slate-600">
+        En 4 pasos pasamos de "no apareces en Google" a tener un negocio que atrae
+        clientes solo.
+      </p>
+    </div>
+
+    <div class="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      {
+        pasos.map((p) => (
+          <div class="relative rounded-2xl bg-white p-7 shadow-sm">
+            <span class="text-4xl font-extrabold text-brand-100">{p.n}</span>
+            <h3 class="mt-3 text-lg font-bold text-ink">{p.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-slate-600">{p.desc}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

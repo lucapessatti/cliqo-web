@@ -1,0 +1,72 @@
+---
+import HeroVisual from "./HeroVisual.astro";
+import HeroMockup from "./HeroMockup.astro";
+import Marquee from "./Marquee.astro";
+---
+
+<section
+  class="relative min-h-dvh overflow-hidden bg-gradient-to-br from-brand-600 via-brand-500 to-brand-300"
+>
+  <div class="absolute inset-0 bg-[radial-gradient(120%_120%_at_85%_30%,rgba(219,234,254,0.55),transparent_55%)]"></div>
+  <div class="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-brand-700/40 to-transparent"></div>
+
+  <HeroVisual />
+
+  <div class="relative z-10 mx-auto grid min-h-dvh max-w-7xl items-center gap-12 px-6 pb-24 pt-32 lg:grid-cols-2">
+    <div>
+      <span class="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/15 px-4 py-2 text-sm font-semibold text-white backdrop-blur-sm">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#fff" aria-hidden="true">
+          <path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" />
+        </svg>
+        Sin compromiso · Sin permanencia
+      </span>
+
+      <h1 class="mt-6 text-5xl font-extrabold leading-[0.95] tracking-tight text-white sm:text-6xl lg:text-7xl">
+        Tu primer borrador
+        <span class="block">
+          de web en <span class="whitespace-nowrap">24 horas</span>
+        </span>
+      </h1>
+
+      <p class="mt-6 max-w-xl text-lg leading-relaxed text-white/90 sm:text-xl">
+        Y además, <strong class="font-bold text-white">gratis</strong>. En un día tienes
+        el diseño de tu web sobre la mesa. Si te gusta, seguimos juntos. Si no, no
+        te cuesta nada. Así de simple.
+      </p>
+
+      <div class="mt-9 flex flex-wrap items-center gap-4">
+        <a
+          href="#contacto"
+          class="rounded-full bg-white px-8 py-4 text-base font-bold text-ink shadow-lg transition-transform hover:scale-105"
+        >
+          Quiero mi borrador gratis
+        </a>
+        <a
+          href="#servicios"
+          class="rounded-full border border-white/40 px-8 py-4 text-base font-semibold text-white transition-colors hover:bg-white/10"
+        >
+          Ver servicios
+        </a>
+      </div>
+
+      <div class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm text-white/80">
+        <span class="flex items-center gap-2">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+          Entrega en 24 horas
+        </span>
+        <span class="flex items-center gap-2">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+          Primer borrador 100% gratis
+        </span>
+        <span class="flex items-center gap-2">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+          Hecho en Torrent
+        </span>
+      </div>
+    </div>
+
+    <HeroMockup />
+  </div>
+
+  <Marquee />
+</section>
