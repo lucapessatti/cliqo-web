@@ -66,55 +66,30 @@ const loop = [...sectores, ...sectores];
 
       <!-- DERECHA: tarjetas de cristal -->
       <div class="space-y-6 lg:col-span-5 lg:mt-8">
-        <!-- Tarjeta 1: la oferta -->
-        <div class="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-8 shadow-2xl backdrop-blur-xl">
+        <!-- Tarjeta 1: buscador de Google animado -->
+        <div class="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-5 shadow-2xl backdrop-blur-xl">
           <div class="pointer-events-none absolute -mr-16 -mt-16 right-0 top-0 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl"></div>
-          <div class="relative z-10">
-            <div class="mb-7 flex items-center gap-4">
-              <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/20">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="#34d399" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" /></svg>
-              </div>
-              <div>
-                <div class="text-2xl font-bold tracking-tight">Borrador gratis en 24h</div>
-                <div class="text-sm text-white/50">Sin compromiso ni permanencia</div>
-              </div>
+          <p class="relative z-10 mb-4 px-1 text-sm font-medium text-white/60">Cuando te buscan en Google, apareces tú</p>
+          <div class="relative z-10 rounded-2xl bg-white p-4 shadow-lg">
+            <div class="flex items-center gap-3 rounded-full border border-slate-200 px-4 py-2.5">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+              <span id="gs-query" class="text-[15px] text-slate-800"></span>
+              <span id="gs-caret" class="text-[15px] font-light text-emerald-500">|</span>
             </div>
-
-            <div class="mb-6 space-y-3">
-              {
-                ["Web profesional a medida", "Apareces el primero en Google", "Informe de resultados cada mes"].map((f) => (
-                  <div class="flex items-center gap-2.5 text-sm text-white/80">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
-                    {f}
-                  </div>
-                ))
-              }
-            </div>
-
-            <div class="mb-6 h-px w-full bg-white/10"></div>
-
-            <div class="grid grid-cols-2 gap-2 text-center">
-              <div class="flex flex-col">
-                <span class="text-xl font-bold sm:text-2xl">24h</span>
-                <span class="text-[10px] font-medium uppercase tracking-wider text-white/40 sm:text-xs">Primer borrador</span>
+            <div id="gs-result" class="mt-4 flex items-start gap-3 rounded-xl bg-emerald-50 p-3 opacity-0 transition-all duration-500" style="transform:translateY(8px)">
+              <div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-600">
+                <svg width="18" height="18" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="11" stroke="white" stroke-width="2.5" /><circle cx="16" cy="16" r="3.5" fill="white" /></svg>
               </div>
-              <div class="flex flex-col border-l border-white/10">
-                <span class="text-xl font-bold sm:text-2xl">0</span>
-                <span class="text-[10px] font-medium uppercase tracking-wider text-white/40 sm:text-xs">Permanencia</span>
-              </div>
-            </div>
-
-            <div class="mt-7 flex flex-wrap gap-2">
-              <div class="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-medium tracking-wide text-white/80">
-                <span class="relative flex h-2 w-2">
-                  <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-                  <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
-                </span>
-                DISPONIBLES
-              </div>
-              <div class="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[10px] font-medium tracking-wide text-white/80">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
-                SIN COMPROMISO
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <span id="gs-url" class="truncate text-xs text-emerald-800"></span>
+                  <span class="shrink-0 rounded-full bg-emerald-600 px-2 py-0.5 text-[10px] font-bold text-white">1º</span>
+                </div>
+                <div id="gs-title" class="truncate text-[15px] font-semibold text-blue-700"></div>
+                <div class="mt-0.5 flex items-center gap-1.5 text-xs text-slate-500">
+                  <span class="text-amber-500">★★★★★</span>
+                  <span id="gs-rating"></span>
+                </div>
               </div>
             </div>
           </div>
@@ -140,3 +115,66 @@ const loop = [...sectores, ...sectores];
     </div>
   </div>
 </section>
+
+<style>
+  @keyframes gsBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+  #gs-caret { animation: gsBlink 1s step-end infinite; }
+</style>
+
+<script>
+  (() => {
+    const qEl = document.getElementById("gs-query");
+    const caret = document.getElementById("gs-caret");
+    const result = document.getElementById("gs-result");
+    const urlEl = document.getElementById("gs-url");
+    const titleEl = document.getElementById("gs-title");
+    const ratingEl = document.getElementById("gs-rating");
+    if (!qEl || !result) return;
+
+    const items = [
+      { q: "peluquería en Valencia", url: "peluquerianova.es", title: "Peluquería Nova", rating: "4,9 (128 reseñas)" },
+      { q: "restaurante en Valencia", url: "elrincon.es", title: "Restaurante El Rincón", rating: "4,8 (203 reseñas)" },
+      { q: "clínica dental Valencia", url: "dentalsonrisa.es", title: "Clínica Dental Sonrisa", rating: "5,0 (96 reseñas)" },
+      { q: "taller mecánico Valencia", url: "talleresmarti.es", title: "Talleres Martí", rating: "4,9 (150 reseñas)" },
+    ];
+
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+    const show = (it) => {
+      urlEl.textContent = it.url;
+      titleEl.textContent = it.title;
+      ratingEl.textContent = it.rating;
+      result.style.opacity = "1";
+      result.style.transform = "translateY(0)";
+    };
+    const hide = () => {
+      result.style.opacity = "0";
+      result.style.transform = "translateY(8px)";
+    };
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      qEl.textContent = items[0].q;
+      caret.style.display = "none";
+      show(items[0]);
+      return;
+    }
+
+    let i = 0;
+    (async () => {
+      while (true) {
+        const it = items[i];
+        hide();
+        qEl.textContent = "";
+        await wait(300);
+        for (let c = 0; c < it.q.length; c++) { qEl.textContent += it.q[c]; await wait(55); }
+        await wait(350);
+        show(it);
+        await wait(2400);
+        hide();
+        await wait(500);
+        for (let c = it.q.length; c > 0; c--) { qEl.textContent = it.q.slice(0, c - 1); await wait(20); }
+        await wait(200);
+        i = (i + 1) % items.length;
+      }
+    })();
+  })();
+</script>
