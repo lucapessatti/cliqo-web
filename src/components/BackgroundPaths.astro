@@ -1,0 +1,48 @@
+---
+// Fondo de "líneas fluidas" (adaptado del componente React/framer-motion a
+// Astro con SVG + animación CSS de stroke-dashoffset). Sutil, en esmeralda,
+// para dar textura tech sin robar protagonismo.
+const build = (position: number) =>
+  Array.from({ length: 30 }, (_, i) => ({
+    id: i,
+    d: `M-${380 - i * 5 * position} -${189 + i * 6}C-${380 - i * 5 * position} -${189 + i * 6} -${312 - i * 5 * position} ${216 - i * 6} ${152 - i * 5 * position} ${343 - i * 6}C${616 - i * 5 * position} ${470 - i * 6} ${684 - i * 5 * position} ${875 - i * 6} ${684 - i * 5 * position} ${875 - i * 6}`,
+    width: 0.5 + i * 0.03,
+  }));
+const sets = [build(1), build(-1)];
+---
+
+<div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+  {
+    sets.map((paths) => (
+      <svg class="absolute inset-0 h-full w-full text-emerald-400" viewBox="0 0 696 316" fill="none" preserveAspectRatio="xMidYMid slice">
+        {paths.map((p) => (
+          <path
+            d={p.d}
+            stroke="currentColor"
+            stroke-width={p.width}
+            pathLength="1"
+            class="bgpath"
+            style={`animation-delay:-${(p.id % 10) * 1.8}s;animation-duration:${26 + (p.id % 6) * 4}s`}
+          />
+        ))}
+      </svg>
+    ))
+  }
+</div>
+
+<style>
+  .bgpath {
+    stroke-dasharray: 0.35 0.65;
+    stroke-opacity: 0.12;
+    animation-name: bgflow;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+  @keyframes bgflow {
+    from { stroke-dashoffset: 1; }
+    to { stroke-dashoffset: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bgpath { animation: none; stroke-dasharray: none; stroke-opacity: 0.07; }
+  }
+</style>

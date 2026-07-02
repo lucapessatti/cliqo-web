@@ -14,9 +14,11 @@ const sectores = [
   "Fisioterapia",
 ];
 const loop = [...sectores, ...sectores];
+import BackgroundPaths from "./BackgroundPaths.astro";
 ---
 
-<section class="relative min-h-dvh overflow-hidden bg-gradient-to-br from-emerald-950 via-emerald-900 to-neutral-950 text-white">
+<section class="relative min-h-dvh overflow-hidden bg-neutral-950 text-white">
+  <BackgroundPaths />
   <!-- Ambiente: orbes suaves con nuestro verde (lenguaje visual de la web) -->
   <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
     <div class="absolute -right-40 -top-32 h-[42rem] w-[42rem] rounded-full bg-emerald-500/15 blur-3xl"></div>
