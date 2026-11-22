@@ -1,16 +1,19 @@
 ---
-// Logotipo: la palabra CLIQO en Archivo Black con un asterisco pequeño en
-// superíndice a la derecha. Sobre fondo oscuro las letras van en crema y el
-// asterisco en verde; sobre crema, letras aubergine y asterisco verde oscuro.
+// Logotipo: la diana (símbolo) + la palabra CLIQO en Archivo Black.
+// Sobre fondo oscuro, letras crema y diana verde; sobre crema, letras
+// aubergine y diana verde oscuro.
+import Diana from "./Diana.astro";
+
 interface Props {
   tono?: "crema" | "aubergine";
   clase?: string; // tamaño, p.ej. "text-2xl"
 }
 const { tono = "crema", clase = "text-2xl" } = Astro.props;
 const letras = tono === "crema" ? "text-crema" : "text-aubergine";
-const asterisco = tono === "crema" ? "text-verde" : "text-verde-oscuro";
+const diana = tono === "crema" ? "text-verde" : "text-verde-oscuro";
 ---
 
-<span class={`titulo relative inline-block ${clase} ${letras}`} aria-label="Cliqo">
-  CLIQO<span class={`absolute -top-[0.38em] -right-[0.5em] text-[0.5em] ${asterisco}`} aria-hidden="true">*</span>
+<span class={`inline-flex items-center gap-[0.35em] ${clase}`} aria-label="Cliqo">
+  <Diana clase={`${diana} h-[0.92em] w-[0.92em] shrink-0`} />
+  <span class={`titulo ${letras}`}>CLIQO</span>
 </span>

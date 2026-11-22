@@ -1,0 +1,14 @@
+---
+// Símbolo de marca de Cliqo: la diana (círculos concéntricos, idea de "clic").
+// Hereda el color con currentColor; `clase` controla color y tamaño.
+interface Props {
+  clase?: string;
+}
+const { clase = "h-8 w-8 text-verde" } = Astro.props;
+---
+
+<svg viewBox="0 0 100 100" class={clase} fill="none" stroke="currentColor" aria-hidden="true">
+  <circle cx="50" cy="50" r="42" stroke-width="12" />
+  <circle cx="50" cy="50" r="22" stroke-width="12" />
+  <circle cx="50" cy="50" r="7" fill="currentColor" stroke="none" />
+</svg>
