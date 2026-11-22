@@ -1,0 +1,39 @@
+---
+import Asterisco from "./Asterisco.astro";
+import Logo from "./Logo.astro";
+import { SHOW_PEOPLE_PHOTOS } from "../config";
+---
+
+<section id="quienes-somos" class="bg-crema text-aubergine">
+  <div class="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
+    <Asterisco clase="h-8 w-8 text-verde-oscuro" />
+
+    <div class="mt-7 grid gap-12 md:grid-cols-[1.4fr_1fr] md:items-center md:gap-16">
+      <div>
+        <h2 class="titulo max-w-2xl text-[clamp(2rem,6vw,4rem)]">
+          Detrás de Cliqo está Luca.
+        </h2>
+        <p class="mt-6 max-w-xl text-lg leading-relaxed text-aubergine">
+          Máster en análisis de datos. Ayudo a negocios de Torrent y alrededores
+          a que los encuentren y los elijan: miro los números, encuentro qué
+          falla y lo pongo en marcha.
+        </p>
+        <p class="mt-4 max-w-xl text-lg leading-relaxed text-texto-suave">
+          Para la parte de imagen y contenido cuento con Vero como colaboradora.
+        </p>
+      </div>
+
+      {
+        SHOW_PEOPLE_PHOTOS ? (
+          <div class="aspect-square w-full overflow-hidden rounded-2xl bg-aubergine">
+            {/* TODO: foto real de Luca (escala de grises) */}
+          </div>
+        ) : (
+          <div class="flex aspect-square w-full items-center justify-center rounded-2xl bg-aubergine">
+            <Logo tono="crema" clase="text-5xl" />
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>

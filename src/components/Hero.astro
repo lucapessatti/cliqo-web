@@ -1,182 +1,34 @@
 ---
-// Hero con efecto glassmorphism, adaptado del componente React a Astro.
-// Mantiene la identidad de marca (verde esmeralda) sobre un fondo oscuro
-// para que el cristal contraste. Contenido honesto y local (sin logos
-// falsos ni estadísticas inventadas), para no parecer una agencia de IA más.
-const sectores = [
-  "Restaurantes",
-  "Peluquerías",
-  "Clínicas",
-  "Talleres",
-  "Tiendas",
-  "Cafeterías",
-  "Autoescuelas",
-  "Fisioterapia",
-];
-const loop = [...sectores, ...sectores];
-import BackgroundPaths from "./BackgroundPaths.astro";
+import Asterisco from "./Asterisco.astro";
+import { WHATSAPP_URL } from "../config";
 ---
 
-<section class="relative min-h-dvh overflow-hidden bg-neutral-950 text-white">
-  <BackgroundPaths />
-  <!-- Ambiente: orbes suaves con nuestro verde (lenguaje visual de la web) -->
-  <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-    <div class="absolute -right-40 -top-32 h-[42rem] w-[42rem] rounded-full bg-emerald-500/15 blur-3xl"></div>
-    <div class="absolute -left-40 top-1/3 h-[34rem] w-[34rem] rounded-full bg-emerald-600/10 blur-3xl"></div>
-    <div class="absolute inset-0 bg-[radial-gradient(120%_120%_at_80%_20%,rgba(16,185,129,0.12),transparent_55%)]"></div>
-  </div>
+<section id="inicio" class="bg-aubergine text-crema">
+  <div class="mx-auto max-w-6xl px-5 pb-20 pt-10 sm:px-8 sm:pb-28 sm:pt-14">
+    <Asterisco clase="h-9 w-9 text-verde" />
 
-  <div class="relative z-10 mx-auto max-w-7xl px-6 pb-16 pt-32 md:pt-36">
-    <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8">
-      <!-- IZQUIERDA -->
-      <div class="space-y-7 lg:col-span-7">
-        <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-sm font-semibold text-white/80 backdrop-blur-md">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="#34d399" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z" /></svg>
-          Sin compromiso · Sin permanencia
-        </span>
+    <h1 class="titulo mt-8 max-w-5xl text-[clamp(2.5rem,8.5vw,6.25rem)] text-crema">
+      Te decimos qué te está costando clientes. Con datos.
+    </h1>
 
-        <h1 class="text-5xl font-extrabold leading-[0.9] tracking-tight sm:text-6xl lg:text-7xl">
-          Tu primer borrador
-          <span class="block bg-gradient-to-br from-white via-white to-emerald-300 bg-clip-text text-transparent">
-            de web en 24 horas
-          </span>
-        </h1>
+    <p class="mt-8 max-w-xl text-lg leading-relaxed text-crema/85">
+      Consultoría para negocios locales de Torrent y alrededores. Analizamos tu
+      negocio y lo contamos con buena imagen.
+    </p>
 
-        <p class="max-w-xl text-lg leading-relaxed text-white/70">
-          Y además, <strong class="font-semibold text-white">gratis</strong>. En un día tienes el diseño
-          de tu web sobre la mesa. Si te gusta, seguimos juntos. Si no, no te cuesta nada.
-        </p>
-
-        <div class="flex flex-col gap-4 sm:flex-row">
-          <button
-            type="button"
-            data-contact-modal
-            class="group inline-flex items-center justify-center gap-2 rounded-full bg-white px-8 py-4 text-sm font-bold text-emerald-950 transition-all hover:scale-[1.02] hover:bg-emerald-50 active:scale-[0.98]"
-          >
-            Quiero mi borrador gratis
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="transition-transform group-hover:translate-x-1" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-          </button>
-          <a
-            href="#servicios"
-            class="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-8 py-4 text-sm font-semibold text-white backdrop-blur-md transition-colors hover:border-white/25 hover:bg-white/10"
-          >
-            Ver servicios
-          </a>
-        </div>
-
-      </div>
-
-      <!-- DERECHA: tarjetas de cristal -->
-      <div class="space-y-6 lg:col-span-5 lg:mt-8">
-        <!-- Tarjeta 1: buscador de Google animado -->
-        <div class="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-5 shadow-2xl backdrop-blur-xl">
-          <div class="pointer-events-none absolute -mr-16 -mt-16 right-0 top-0 h-64 w-64 rounded-full bg-emerald-400/10 blur-3xl"></div>
-          <p class="relative z-10 mb-4 px-1 text-sm font-medium text-white/60">Cuando te buscan en Google, apareces tú</p>
-          <div class="relative z-10 rounded-2xl bg-white p-4 shadow-lg">
-            <div class="flex items-center gap-3 rounded-full border border-slate-200 px-4 py-2.5">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
-              <span id="gs-query" class="text-[15px] text-slate-800"></span>
-              <span id="gs-caret" class="text-[15px] font-light text-emerald-500">|</span>
-            </div>
-            <div id="gs-result" class="mt-4 flex items-start gap-3 rounded-xl bg-emerald-50 p-3 opacity-0 transition-all duration-500" style="transform:translateY(8px)">
-              <div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-600">
-                <svg width="18" height="18" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="11" stroke="white" stroke-width="2.5" /><circle cx="16" cy="16" r="3.5" fill="white" /></svg>
-              </div>
-              <div class="min-w-0 flex-1">
-                <div class="flex items-center gap-2">
-                  <span id="gs-url" class="truncate text-xs text-emerald-800"></span>
-                  <span class="shrink-0 rounded-full bg-emerald-600 px-2 py-0.5 text-[10px] font-bold text-white">1º</span>
-                </div>
-                <div id="gs-title" class="truncate text-[15px] font-semibold text-blue-700"></div>
-                <div class="mt-0.5 flex items-center gap-1.5 text-xs text-slate-500">
-                  <span class="text-amber-500">★★★★★</span>
-                  <span id="gs-rating"></span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tarjeta 2: sectores (marquee) -->
-        <div class="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 py-7 backdrop-blur-xl">
-          <h3 class="mb-5 px-8 text-sm font-medium text-white/60">Pensado para comercios como el tuyo</h3>
-          <div class="relative flex overflow-hidden" style="mask-image:linear-gradient(to right,transparent,black 15%,black 85%,transparent);-webkit-mask-image:linear-gradient(to right,transparent,black 15%,black 85%,transparent)">
-            <div class="flex w-max animate-marquee gap-3 whitespace-nowrap px-4">
-              {
-                loop.map((s) => (
-                  <span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/80">
-                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
-                    {s}
-                  </span>
-                ))
-              }
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-5">
+      <a
+        href={WHATSAPP_URL}
+        class="titulo rounded-lg bg-verde px-7 py-4 text-sm text-aubergine transition-transform hover:scale-[1.03]"
+      >
+        Pedir mini-auditoría gratis
+      </a>
+      <a
+        href="#como-trabajamos"
+        class="text-sm font-semibold text-verde underline-offset-4 hover:underline"
+      >
+        Cómo trabajamos ↓
+      </a>
     </div>
   </div>
 </section>
-
-<style>
-  @keyframes gsBlink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-  #gs-caret { animation: gsBlink 1s step-end infinite; }
-</style>
-
-<script>
-  (() => {
-    const qEl = document.getElementById("gs-query");
-    const caret = document.getElementById("gs-caret");
-    const result = document.getElementById("gs-result");
-    const urlEl = document.getElementById("gs-url");
-    const titleEl = document.getElementById("gs-title");
-    const ratingEl = document.getElementById("gs-rating");
-    if (!qEl || !result) return;
-
-    const items = [
-      { q: "peluquería en Valencia", url: "peluquerianova.es", title: "Peluquería Nova", rating: "4,9 (128 reseñas)" },
-      { q: "restaurante en Valencia", url: "elrincon.es", title: "Restaurante El Rincón", rating: "4,8 (203 reseñas)" },
-      { q: "clínica dental Valencia", url: "dentalsonrisa.es", title: "Clínica Dental Sonrisa", rating: "5,0 (96 reseñas)" },
-      { q: "taller mecánico Valencia", url: "talleresmarti.es", title: "Talleres Martí", rating: "4,9 (150 reseñas)" },
-    ];
-
-    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
-    const show = (it) => {
-      urlEl.textContent = it.url;
-      titleEl.textContent = it.title;
-      ratingEl.textContent = it.rating;
-      result.style.opacity = "1";
-      result.style.transform = "translateY(0)";
-    };
-    const hide = () => {
-      result.style.opacity = "0";
-      result.style.transform = "translateY(8px)";
-    };
-
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      qEl.textContent = items[0].q;
-      caret.style.display = "none";
-      show(items[0]);
-      return;
-    }
-
-    let i = 0;
-    (async () => {
-      while (true) {
-        const it = items[i];
-        hide();
-        qEl.textContent = "";
-        await wait(300);
-        for (let c = 0; c < it.q.length; c++) { qEl.textContent += it.q[c]; await wait(55); }
-        await wait(350);
-        show(it);
-        await wait(2400);
-        hide();
-        await wait(500);
-        for (let c = it.q.length; c > 0; c--) { qEl.textContent = it.q.slice(0, c - 1); await wait(20); }
-        await wait(200);
-        i = (i + 1) % items.length;
-      }
-    })();
-  })();
-</script>

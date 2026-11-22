@@ -1,0 +1,22 @@
+---
+// Asterisco: el motivo gráfico de la marca. Seis brazos, rotundo.
+// `clase` controla el color (text-verde, text-verde-oscuro, text-crema...) y el tamaño.
+interface Props {
+  clase?: string;
+}
+const { clase = "h-8 w-8 text-verde" } = Astro.props;
+---
+
+<svg
+  viewBox="0 0 100 100"
+  class={clase}
+  fill="none"
+  stroke="currentColor"
+  stroke-width="15"
+  stroke-linecap="round"
+  aria-hidden="true"
+>
+  <line x1="50" y1="9" x2="50" y2="91" />
+  <line x1="14.5" y1="29.5" x2="85.5" y2="70.5" />
+  <line x1="14.5" y1="70.5" x2="85.5" y2="29.5" />
+</svg>

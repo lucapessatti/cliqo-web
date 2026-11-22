@@ -1,0 +1,55 @@
+---
+import Asterisco from "./Asterisco.astro";
+
+const preguntas = [
+  {
+    q: "¿Cuánto cuesta?",
+    a: "La mini-auditoría es gratis. La auditoría y el acompañamiento se presupuestan después de una llamada de 15 minutos.",
+  },
+  {
+    q: "¿Cuánto tardáis?",
+    // TODO: confirmar plazo real de entrega de la mini-auditoría.
+    a: "La mini-auditoría te la devolvemos en pocos días.",
+  },
+  {
+    q: "No tengo tiempo.",
+    a: "La llamada dura 15 minutos y el resto lo hacemos nosotros.",
+  },
+  {
+    q: "¿Qué necesitáis de mí?",
+    a: "Acceso a tu ficha y tus redes, y alguna cifra de tu negocio.",
+  },
+  {
+    q: "¿Prometéis resultados?",
+    a: "No. Medimos, te decimos qué hay que cambiar y comprobamos si ha funcionado.",
+  },
+  {
+    q: "¿Qué hacéis con mis datos?",
+    a: "Solo trabajamos con tu información con tu permiso por escrito y bajo la normativa de protección de datos.",
+  },
+];
+---
+
+<section class="bg-aubergine text-crema">
+  <div class="mx-auto max-w-3xl px-5 py-20 sm:px-8 sm:py-28">
+    <Asterisco clase="h-8 w-8 text-verde" />
+
+    <h2 class="titulo mt-7 text-[clamp(2rem,6vw,4rem)] text-crema">
+      Preguntas frecuentes.
+    </h2>
+
+    <div class="mt-10">
+      {
+        preguntas.map((p) => (
+          <details class="group border-t border-crema/15 py-5">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-bold text-crema">
+              {p.q}
+              <span class="shrink-0 text-verde transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+            </summary>
+            <p class="mt-3 max-w-xl leading-relaxed text-crema/80">{p.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

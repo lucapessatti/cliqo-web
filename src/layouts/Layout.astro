@@ -7,8 +7,9 @@ interface Props {
 }
 
 const {
-  title = "Cliqo — Marketing digital para comercios locales de Valencia",
-  description = "Posicionamos tu negocio en Google, te creamos una web profesional y atraemos a tus clientes. SEO local, diseño web y analítica para comercios de Valencia.",
+  title = "Cliqo · Consultoría para negocios locales de Torrent",
+  description =
+    "Te decimos qué te está costando clientes, con datos. Consultoría para negocios locales de Torrent y alrededores: analizamos tu ficha de Google, tus redes y tus números, y lo contamos con buena imagen.",
 } = Astro.props;
 ---
 
@@ -20,14 +21,21 @@ const {
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     <meta name="description" content={description} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="es_ES" />
+    <meta name="twitter:card" content="summary_large_image" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
   </head>
-  <body class="bg-white font-sans text-ink antialiased">
+  <body class="bg-aubergine font-texto text-crema antialiased">
     <slot />
   </body>
 </html>

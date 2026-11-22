@@ -1,0 +1,42 @@
+---
+import Asterisco from "./Asterisco.astro";
+import { WHATSAPP_URL } from "../config";
+
+const preguntas = [
+  "¿Tu horario es el real?",
+  "¿Respondes a tus reseñas?",
+  "¿Un cliente puede contactarte con un toque?",
+];
+---
+
+<section class="bg-crema text-aubergine">
+  <div class="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
+    <Asterisco clase="h-8 w-8 text-verde-oscuro" />
+
+    <h2 class="titulo mt-7 max-w-3xl text-[clamp(2rem,6vw,4rem)]">
+      ¿Qué dice tu ficha de Google de tu negocio?
+    </h2>
+
+    <div class="mt-12 grid gap-4 sm:grid-cols-3">
+      {
+        preguntas.map((p) => (
+          <div class="rounded-xl bg-aubergine p-7 text-crema">
+            <p class="text-xl font-bold leading-snug">{p}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="mt-12 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+      <p class="max-w-md text-lg font-semibold text-texto-suave">
+        Si dudas en alguna, es justo lo que miramos.
+      </p>
+      <a
+        href={WHATSAPP_URL}
+        class="titulo inline-block shrink-0 rounded-lg bg-verde px-7 py-4 text-sm text-aubergine transition-transform hover:scale-[1.03]"
+      >
+        Pedir mini-auditoría gratis
+      </a>
+    </div>
+  </div>
+</section>

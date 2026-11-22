@@ -1,0 +1,39 @@
+---
+import Asterisco from "./Asterisco.astro";
+
+const lineas = [
+  {
+    nombre: "Datos",
+    texto: "Auditorías, procesos y digitalización.",
+  },
+  {
+    nombre: "Imagen",
+    texto: "Contenido, redes y estrategia visual.",
+  },
+];
+---
+
+<section id="que-hacemos" class="bg-verde text-aubergine">
+  <div class="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
+    <Asterisco clase="h-8 w-8 text-aubergine" />
+
+    <h2 class="titulo mt-7 max-w-3xl text-[clamp(2rem,6vw,4rem)]">
+      Dos líneas, un objetivo.
+    </h2>
+
+    <div class="mt-12 grid gap-y-10 sm:grid-cols-2 sm:gap-x-12">
+      {
+        lineas.map((l) => (
+          <div class="border-t-2 border-aubergine/40 pt-5">
+            <h3 class="titulo text-2xl">{l.nombre}</h3>
+            <p class="mt-3 max-w-sm text-lg font-semibold leading-relaxed">{l.texto}</p>
+          </div>
+        ))
+      }
+    </div>
+
+    <p class="titulo mt-14 max-w-2xl text-2xl sm:text-3xl">
+      Que te encuentren y que te elijan.
+    </p>
+  </div>
+</section>
