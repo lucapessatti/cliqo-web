@@ -37,10 +37,10 @@ Qué hace el Worker: comprueba que la petición viene de la propia web, valida n
 
 Pruebas de la lógica (fuera de Cloudflare): `worker/contact.ts` y `worker/mime.ts` no dependen de Cloudflare.
 
-## Qué rellenar antes de publicar
+## Pendiente tras publicar
 
-- Páginas `/aviso-legal` y `/privacidad`: faltan titular, NIF y domicilio, y redactar el texto (incluido el tratamiento del formulario de contacto). **No publicar hasta completarlas.**
-- Secreto `CONTACT_TO` en Cloudflare (ver arriba).
+- Secreto `CONTACT_TO` en Cloudflare (ver arriba) y un envío de prueba desde `/contacto`.
+- Revisión de `/aviso-legal` y `/privacidad` por un gestor. Los datos del titular están en `src/config.ts` (`TITULAR`).
 
 Decisiones ya tomadas (26/11/2026):
 - WhatsApp **no se muestra** en la web; solo lo usa Luca cuando contacta primero.
@@ -51,7 +51,7 @@ Decisiones ya tomadas (26/11/2026):
 
 - `src/pages/` — `index.astro`, `contacto`, `aviso-legal`, `privacidad`, `404`
 - `src/components/` — secciones de la página (Hero, TresCosas, QueHacemos, ComoTrabajamos, EjemploDiagnostico, Servicios, QuienesSomos, FAQ, Cierre…) y `FlowButton.astro` (botón de acción)
-- `src/config.ts` — constantes: contacto (`CTA_URL`, `EMAIL`), flags (`SHOW_PRICES`, `SHOW_PEOPLE_PHOTOS`)
+- `src/config.ts` — constantes: contacto (`CTA_URL`, `EMAIL`), titular legal (`TITULAR`), flags (`SHOW_PRICES`, `SHOW_PEOPLE_PHOTOS`)
 - `src/styles/global.css` — tokens de marca y de movimiento
 - `worker/` — Worker de Cloudflare del formulario de contacto
 - `public/` — favicon, `robots.txt`, `sitemap.xml`

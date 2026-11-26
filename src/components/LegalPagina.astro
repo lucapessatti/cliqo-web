@@ -1,0 +1,84 @@
+---
+// Plantilla de las páginas legales (aviso legal y política de privacidad).
+import Layout from "../layouts/Layout.astro";
+import Logo from "./Logo.astro";
+import { FECHA_LEGAL } from "../config";
+
+interface Props {
+  titulo: string;
+  descripcion: string;
+}
+const { titulo, descripcion } = Astro.props;
+---
+
+<Layout title={`${titulo} · Cliqo`} description={descripcion}>
+  <main class="mx-auto max-w-3xl px-5 py-16 sm:px-8 sm:py-24">
+    <a href="/" class="mb-10 inline-block"><Logo tono="crema" clase="text-2xl" /></a>
+
+    <h1 class="titulo titulo-aire text-[clamp(2rem,6vw,3.5rem)] text-crema">{titulo}</h1>
+    <p class="mt-4 text-sm text-crema/60">Última actualización: {FECHA_LEGAL}</p>
+
+    <div class="legal mt-8">
+      <slot />
+    </div>
+
+    <p class="mt-14">
+      <a href="/" class="text-sm font-semibold text-verde underline underline-offset-4">← Volver al inicio</a>
+    </p>
+  </main>
+</Layout>
+
+<style>
+  .legal {
+    line-height: 1.7;
+    color: rgba(255, 253, 180, 0.85);
+  }
+  .legal :global(h2) {
+    margin: 2.5rem 0 0.75rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #fffdb4;
+  }
+  .legal :global(p) {
+    margin: 0 0 1rem;
+  }
+  .legal :global(ul) {
+    margin: 0 0 1rem;
+    padding-left: 1.25rem;
+    list-style: disc;
+  }
+  .legal :global(li) {
+    margin-bottom: 0.4rem;
+  }
+  .legal :global(strong) {
+    color: #fffdb4;
+  }
+  .legal :global(a) {
+    color: #78ab6b;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .legal :global(dl) {
+    margin: 0 0 1rem;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.4rem 1.25rem;
+  }
+  .legal :global(dt) {
+    font-weight: 600;
+    color: #fffdb4;
+  }
+  .legal :global(dd) {
+    margin: 0;
+  }
+  @media (max-width: 520px) {
+    .legal :global(dl) {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+    .legal :global(dd) {
+      margin-bottom: 0.6rem;
+    }
+  }
+</style>

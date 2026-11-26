@@ -1,4 +1,10 @@
 ---
+// Tipografías alojadas en la propia web (sin Google Fonts): no se envía la IP de nadie a terceros
+// y se cargan con font-display: swap. Solo los pesos que se usan.
+import "@fontsource/archivo-black/400.css";
+import "@fontsource/inter/400.css";
+import "@fontsource/inter/600.css";
+import "@fontsource/inter/700.css";
 import "../styles/global.css";
 import { SITE_URL } from "../config";
 
@@ -35,13 +41,6 @@ const canonical = new URL(ruta, SITE_URL).href;
     <meta property="og:description" content={description} />
     <meta property="og:locale" content="es_ES" />
     <meta name="twitter:card" content="summary" />
-
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
   </head>
   <body class="bg-aubergine font-texto text-crema antialiased">
     <slot />

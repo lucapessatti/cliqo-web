@@ -5,6 +5,15 @@
 export const SITE_URL = "https://cliqo.es";
 export const EMAIL = "contacto@cliqo.es";
 
+// Titular de la web (aviso legal y política de privacidad). Datos facilitados por Luca el 26/11/2026.
+// Revisar si cambian (por ejemplo, si más adelante hay un domicilio profesional distinto).
+export const TITULAR = {
+  nombre: "Luca Pessatti",
+  nif: "29215527F",
+  domicilio: "Calle Sierra Espadan 19, Castellnovo",
+};
+export const FECHA_LEGAL = "26 de noviembre de 2026";
+
 // Acción principal: todos los botones llevan al formulario de contacto (nombre, correo
 // y mensaje), que envía el mensaje por correo (ver worker/index.ts y el README).
 // Decisión de Luca (26/11/2026): el WhatsApp NO se muestra en la web; solo lo usa Luca

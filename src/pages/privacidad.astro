@@ -1,34 +1,110 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Logo from "../components/Logo.astro";
+import LegalPagina from "../components/LegalPagina.astro";
+import { TITULAR, EMAIL } from "../config";
 ---
 
-<Layout title="Política de privacidad · Cliqo" description="Política de privacidad de Cliqo.">
-  <main class="mx-auto max-w-3xl px-5 py-16 sm:px-8 sm:py-24">
-    <a href="/" class="mb-10 inline-block"><Logo tono="crema" clase="text-2xl" /></a>
+<LegalPagina titulo="Política de privacidad" descripcion="Cómo trata Cliqo tus datos personales: responsable, finalidad, base legal, conservación, destinatarios y derechos.">
+  <p>
+    Esta política explica, en pocas palabras, qué datos recogemos en esta web, para qué los usamos y qué derechos
+    tienes, conforme al Reglamento (UE) 2016/679 (RGPD) y a la Ley Orgánica 3/2018 (LOPDGDD).
+  </p>
 
-    <h1 class="titulo text-[clamp(2rem,6vw,3.5rem)] text-crema">
-      Política de privacidad
-    </h1>
+  <h2>1. Responsable del tratamiento</h2>
+  <dl>
+    <dt>Responsable</dt>
+    <dd>{TITULAR.nombre}</dd>
+    <dt>NIF</dt>
+    <dd>{TITULAR.nif}</dd>
+    <dt>Domicilio</dt>
+    <dd>{TITULAR.domicilio}</dd>
+    <dt>Correo electrónico</dt>
+    <dd><a href={`mailto:${EMAIL}`}>{EMAIL}</a></dd>
+  </dl>
 
-    <div class="mt-8 space-y-5 leading-relaxed text-crema/80">
-      <p>
-        <!-- TODO: completar con los datos reales del responsable antes de publicar. -->
-        Responsable del tratamiento: <strong class="text-crema">TODO</strong> ·
-        Correo de contacto: <strong class="text-crema">contacto@cliqo.es</strong>.
-      </p>
-      <p>
-        TODO: redactar la política de privacidad (qué datos se recogen, con qué
-        finalidad y base legal, conservación, destinatarios, derechos del
-        usuario y cómo ejercerlos) una vez estén los datos del responsable. No
-        publicar la web hasta completarlo.
-      </p>
-      <p>
-        TODO (formulario de contacto, /contacto): describir el tratamiento de nombre, correo y
-        mensaje (finalidad: responder a la solicitud de diagnóstico; consentimiento marcado en el
-        propio formulario; conservación; Cloudflare como proveedor que reenvía el correo). El
-        formulario ya exige aceptar esta política antes de enviar.
-      </p>
-    </div>
-  </main>
-</Layout>
+  <h2>2. Qué datos recogemos y para qué</h2>
+  <p>
+    <strong>Formulario de contacto y correo.</strong> Si usas el formulario de la página de contacto o nos escribes a
+    {" "}{EMAIL}, tratamos tu nombre, tu correo electrónico y el contenido de tu mensaje (y los datos que decidas incluir
+    en él, como el nombre de tu negocio).
+  </p>
+  <ul>
+    <li><strong>Finalidad:</strong> atender tu solicitud de diagnóstico gratuito o tu consulta y responderte.</li>
+    <li>
+      <strong>Base legal:</strong> tu consentimiento (artículo 6.1.a del RGPD), que das al marcar la casilla del
+      formulario o al escribirnos.
+    </li>
+    <li>
+      <strong>Obligatoriedad:</strong> los campos del formulario son obligatorios; sin ellos no podemos responderte.
+    </li>
+  </ul>
+  <p>
+    No tomamos decisiones automatizadas ni elaboramos perfiles con tus datos. No recogemos datos de menores de 14
+    años.
+  </p>
+
+  <h2>3. Cuánto tiempo los conservamos</h2>
+  <p>
+    Si no llega a haber relación comercial, borramos tus datos como máximo 12 meses después de nuestro último
+    contacto. Si la hay, los conservamos mientras dure y, después, bloqueados durante los plazos legales en los que
+    pudieran surgir responsabilidades.
+  </p>
+
+  <h2>4. A quién se los comunicamos</h2>
+  <p>
+    No cedemos tus datos a terceros salvo obligación legal. Usamos estos proveedores, que tratan los datos por nuestra
+    cuenta y solo para prestar su servicio:
+  </p>
+  <ul>
+    <li>
+      <strong>Cloudflare, Inc.</strong>: alojamiento de la web y reenvío del correo del formulario.
+    </li>
+    <li>
+      <strong>Google (Gmail)</strong>: buzón de correo donde recibimos los mensajes.
+    </li>
+  </ul>
+  <p>
+    Estos proveedores pueden tratar datos fuera del Espacio Económico Europeo, con las garantías que exige el RGPD
+    (como las cláusulas contractuales tipo o el Marco de Privacidad de Datos UE-EE. UU.).
+  </p>
+
+  <h2>5. Cookies y almacenamiento en tu navegador</h2>
+  <p>
+    Esta web <strong>no usa cookies propias ni de terceros</strong> de analítica, publicidad o seguimiento. Las
+    tipografías se cargan desde la propia web, no desde servidores de terceros.
+  </p>
+  <p>
+    Solo guarda en tu navegador, mientras dura la sesión, un valor técnico para no repetir la animación de entrada. No
+    sale de tu dispositivo, no se envía a ningún servidor ni identifica a nadie.
+  </p>
+  <p>
+    Como en cualquier sitio web, el servidor y la red de distribución (Cloudflare) pueden procesar datos técnicos de
+    la conexión, como la dirección IP, para mantener el sitio seguro y funcionando.
+  </p>
+
+  <h2>6. Tus derechos</h2>
+  <p>Puedes ejercer en cualquier momento estos derechos sobre tus datos:</p>
+  <ul>
+    <li>Acceso, rectificación y supresión.</li>
+    <li>Oposición y limitación del tratamiento.</li>
+    <li>Portabilidad de tus datos.</li>
+    <li>Retirar tu consentimiento, sin que afecte a lo ya tratado.</li>
+  </ul>
+  <p>
+    Para ejercerlos, escribe a <a href={`mailto:${EMAIL}`}>{EMAIL}</a> indicando el derecho que quieres ejercer y
+    adjuntando una copia de un documento que acredite tu identidad. Si crees que tus datos no se tratan
+    correctamente, puedes presentar una reclamación ante la Agencia Española de Protección de Datos
+    (<a href="https://www.aepd.es" rel="noopener">www.aepd.es</a>).
+  </p>
+
+  <h2>7. Seguridad</h2>
+  <p>
+    Aplicamos medidas técnicas y organizativas razonables para proteger tus datos: la web se sirve por conexión
+    cifrada y los mensajes los lee únicamente el titular.
+  </p>
+
+  <h2>8. Cambios en esta política</h2>
+  <p>
+    Si cambiamos algo relevante, actualizaremos esta página y la fecha de «Última actualización». Más información
+    sobre las condiciones de uso en el <a href="/aviso-legal">aviso legal</a>.
+  </p>
+</LegalPagina>
