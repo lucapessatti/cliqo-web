@@ -1,8 +1,9 @@
 ---
 // Intro de carga: fondo berenjena, la diana se compone en espiral (se dibuja
 // del centro hacia afuera y se asienta), y "CLIQO" aparece poco a poco.
-// Al terminar, el overlay se desvanece y revela la página.
-// Respeta prefers-reduced-motion y se puede saltar con un clic.
+// Al terminar (~1,75 s), el overlay se desvanece y revela la página.
+// Solo se muestra una vez por sesión. Respeta prefers-reduced-motion y se
+// puede saltar con un clic.
 
 // Espiral de Arquímedes, del centro hacia afuera (pathLength normalizado a 1).
 const cx = 50, cy = 50, turns = 3.5, rMin = 1.5, rMax = 40, steps = 260;
@@ -16,6 +17,29 @@ for (let i = 0; i <= steps; i++) {
   spiral += i === 0 ? `M${x} ${y}` : ` L${x} ${y}`;
 }
 ---
+
+<script is:inline>
+  (function () {
+    var root = document.documentElement;
+    root.classList.add("js");
+    var seen = false;
+    try {
+      seen = !!sessionStorage.getItem("cliqo-intro");
+      if (!seen) sessionStorage.setItem("cliqo-intro", "1");
+    } catch (e) {}
+    // Visita repetida: sin intro y el hero entra de inmediato.
+    if (seen) root.classList.add("intro-skip", "hero-go");
+    // Red de seguridad: pase lo que pase, el hero se muestra.
+    setTimeout(function () { root.classList.add("hero-go"); }, 2500);
+    // Red de seguridad de la historia: si el observador no arranca, se muestra todo.
+    setTimeout(function () {
+      if (root.classList.contains("reveal-ready")) return;
+      document
+        .querySelectorAll("[data-reveal],[data-section],[data-story]")
+        .forEach(function (el) { el.classList.add("in"); });
+    }, 4000);
+  })();
+</script>
 
 <div id="intro" class="intro" role="presentation">
   <div class="intro-stack">
@@ -40,7 +64,12 @@ for (let i = 0; i <= steps; i++) {
     align-items: center;
     justify-content: center;
     background: #351e28;
-    transition: opacity 0.6s ease;
+    transition: opacity 250ms var(--ease-out);
+    /* Salvavidas sin JS: si el script no corre, el intro se retira solo. */
+    animation: intro-failsafe 250ms var(--ease-out) 2.2s forwards;
+  }
+  @keyframes intro-failsafe {
+    to { opacity: 0; visibility: hidden; pointer-events: none; }
   }
   .intro.done {
     opacity: 0;
@@ -61,8 +90,8 @@ for (let i = 0; i <= steps; i++) {
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
     animation:
-      intro-draw 1.3s ease-out forwards,
-      intro-spiral-fade 0.5s ease 1.25s forwards;
+      intro-draw 700ms var(--ease-out) forwards,
+      intro-spiral-fade 300ms var(--ease-out) 600ms forwards;
   }
   @keyframes intro-draw {
     to { stroke-dashoffset: 0; }
@@ -76,7 +105,7 @@ for (let i = 0; i <= steps; i++) {
     transform-box: fill-box;
     transform-origin: center;
     transform: rotate(-200deg) scale(0.25);
-    animation: intro-pop 0.75s cubic-bezier(0.18, 1.1, 0.3, 1) 1.1s forwards;
+    animation: intro-pop 500ms cubic-bezier(0.18, 1.1, 0.3, 1) 550ms forwards;
   }
   @keyframes intro-pop {
     to { opacity: 1; transform: rotate(0deg) scale(1); }
@@ -86,19 +115,24 @@ for (let i = 0; i <= steps; i++) {
     color: #fffdb4;
     font-size: clamp(1.6rem, 6vw, 2.75rem);
     opacity: 0;
-    filter: blur(8px);
-    letter-spacing: 0.4em;
-    padding-left: 0.4em;
-    animation: intro-word 0.8s ease 1.75s forwards;
+    transform: translateY(8px);
+    filter: blur(2px);
+    letter-spacing: 0.08em;
+    padding-left: 0.08em;
+    animation: intro-word 400ms var(--ease-out) 900ms forwards;
   }
   @keyframes intro-word {
-    to { opacity: 1; filter: blur(0); letter-spacing: 0.08em; padding-left: 0.08em; }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+
+  :global(html.intro-skip) .intro {
+    display: none;
   }
 
   @media (prefers-reduced-motion: reduce) {
     .spiral, .diana, .intro-word { animation: none; }
     .diana { opacity: 1; transform: none; }
-    .intro-word { opacity: 1; filter: none; letter-spacing: 0.08em; padding-left: 0.08em; }
+    .intro-word { opacity: 1; filter: none; transform: none; }
     .spiral { opacity: 0; }
   }
 </style>
@@ -106,21 +140,26 @@ for (let i = 0; i <= steps; i++) {
 <script>
   const intro = document.getElementById("intro");
   if (intro) {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    document.body.style.overflow = "hidden";
-    const finish = () => {
-      intro.classList.add("done");
-      document.body.style.overflow = "";
-      setTimeout(() => intro.remove(), 650);
-    };
-    if (reduce) {
-      setTimeout(finish, 600);
+    if (document.documentElement.classList.contains("intro-skip")) {
+      intro.remove();
     } else {
-      const t = setTimeout(finish, 2750);
-      intro.addEventListener("click", () => {
-        clearTimeout(t);
-        finish();
-      });
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      document.body.style.overflow = "hidden";
+      const finish = () => {
+        document.documentElement.classList.add("hero-go");
+        intro.classList.add("done");
+        document.body.style.overflow = "";
+        setTimeout(() => intro.remove(), 300);
+      };
+      if (reduce) {
+        setTimeout(finish, 600);
+      } else {
+        const t = setTimeout(finish, 1500);
+        intro.addEventListener("click", () => {
+          clearTimeout(t);
+          finish();
+        });
+      }
     }
   }
 </script>

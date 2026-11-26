@@ -1,5 +1,15 @@
 name = "cliqo-web"
+main = "worker/index.ts"
 compatibility_date = "2025-06-01"
 
+# La web estática se sirve directamente; el Worker solo atiende /api/*.
 [assets]
 directory = "./dist"
+not_found_handling = "404-page"
+run_worker_first = ["/api/*"]
+
+# Envío de correo para el formulario de contacto (Email Routing debe estar activo en cliqo.es).
+# Sin destination_address a propósito: el destino va en el secreto CONTACT_TO (panel de Cloudflare),
+# para no dejar el buzón real escrito en el repositorio.
+[[send_email]]
+name = "EMAIL"

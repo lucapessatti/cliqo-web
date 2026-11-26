@@ -7,11 +7,11 @@ const pasos = [
     texto: "15 minutos: escuchamos tu negocio y qué te preocupa.",
   },
   {
-    titulo: "Auditoría",
+    titulo: "Diagnóstico",
     texto: "Revisamos tu ficha de Google, tus redes y tus números.",
   },
   {
-    titulo: "Devolución",
+    titulo: "Propuesta",
     texto: "Te contamos qué hemos encontrado y qué haríamos primero (máximo 3 acciones).",
   },
   {
@@ -21,30 +21,144 @@ const pasos = [
 ];
 ---
 
-<section id="como-trabajamos" class="bg-aubergine text-crema">
+<section id="como-trabajamos" data-section class="bg-aubergine text-crema">
   <div class="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
     <Diana clase="h-8 w-8 text-verde" />
 
-    <h2 class="titulo mt-7 max-w-3xl text-[clamp(2rem,6vw,4rem)] text-crema">
+    <h2 data-reveal class="titulo mt-7 max-w-3xl text-[clamp(2rem,6vw,4rem)] text-crema">
       Así trabajamos, en 4 pasos.
     </h2>
 
-    <ol class="mt-12 max-w-3xl">
-      {
-        pasos.map((p, i) => (
-          <li class="flex gap-5 border-t border-crema/15 py-6">
-            <span class="titulo shrink-0 text-3xl text-verde">{i + 1}</span>
-            <div>
-              <h3 class="titulo text-xl text-crema">{p.titulo}</h3>
-              <p class="mt-2 max-w-xl leading-relaxed text-crema/80">{p.texto}</p>
-            </div>
-          </li>
-        ))
-      }
-    </ol>
+    <!-- Capítulo 4, el hilo de la historia: el punto verde (el clic) baja por la línea
+         al hacer scroll y va encendiendo cada paso. -->
+    <div class="steps relative mt-12 max-w-3xl pl-9" data-steps>
+      <span class="rail" aria-hidden="true"></span>
+      <span class="rail-fill" aria-hidden="true"></span>
+      <span class="dot" aria-hidden="true"></span>
 
-    <p class="mt-10 max-w-xl text-lg font-semibold text-verde">
+      <ol>
+        {
+          pasos.map((p, i) => (
+            <li class="step flex gap-5 border-t border-crema/15 py-6">
+              <span class="titulo shrink-0 text-3xl text-verde">{i + 1}</span>
+              <div>
+                <h3 class="titulo text-xl text-crema">{p.titulo}</h3>
+                <p class="mt-2 max-w-xl leading-relaxed text-crema/80">{p.texto}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    <p data-reveal class="mt-10 max-w-xl text-lg font-semibold text-verde">
       Sin letra pequeña: primero miramos, luego decides.
     </p>
   </div>
 </section>
+
+<style>
+  /* Sin JS no hay hilo: la lista se ve normal. */
+  .rail,
+  .rail-fill,
+  .dot {
+    display: none;
+  }
+  :global(html.js) .rail,
+  :global(html.js) .rail-fill,
+  :global(html.js) .dot {
+    display: block;
+    position: absolute;
+    left: 0;
+  }
+  :global(html.js) .rail,
+  :global(html.js) .rail-fill {
+    left: 7px;
+    width: 2px;
+    top: 0;
+    height: 0;
+  }
+  :global(html.js) .rail {
+    background: rgba(255, 253, 180, 0.15);
+  }
+  :global(html.js) .rail-fill {
+    background: #78ab6b;
+    transform-origin: top;
+    transform: scaleY(0);
+  }
+  :global(html.js) .dot {
+    top: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 9999px;
+    background: #78ab6b;
+    transform: translateY(0);
+  }
+
+  /* Los pasos todavía no alcanzados quedan atenuados. */
+  :global(html.js) .step {
+    opacity: 0.4;
+    transition: opacity 300ms var(--ease-out);
+  }
+  :global(html.js) .step.on {
+    opacity: 1;
+  }
+</style>
+
+<script>
+  const wrap = document.querySelector<HTMLElement>("[data-steps]");
+  if (wrap) {
+    const rail = wrap.querySelector<HTMLElement>(".rail")!;
+    const fill = wrap.querySelector<HTMLElement>(".rail-fill")!;
+    const dot = wrap.querySelector<HTMLElement>(".dot")!;
+    const steps = Array.from(wrap.querySelectorAll<HTMLElement>(".step"));
+
+    let markers: number[] = [];
+    let range = 1;
+    let visible = false;
+    let queued = false;
+
+    // Posición vertical (dentro del bloque) de la cifra de cada paso.
+    const measure = () => {
+      markers = steps.map((li) => li.offsetTop + 38);
+      range = Math.max(1, markers[markers.length - 1] - markers[0]);
+      rail.style.top = fill.style.top = `${markers[0]}px`;
+      rail.style.height = fill.style.height = `${range}px`;
+      update();
+    };
+
+    const update = () => {
+      queued = false;
+      const r = wrap.getBoundingClientRect();
+      const a = window.innerHeight * 0.55 - r.top; // línea de lectura al 55 % de la pantalla
+      const p = Math.min(1, Math.max(0, (a - markers[0]) / range));
+      fill.style.transform = `scaleY(${p})`;
+      dot.style.transform = `translateY(${markers[0] + p * range - 8}px)`;
+      steps.forEach((li, i) => li.classList.toggle("on", a >= markers[i] - 24));
+    };
+
+    const onScroll = () => {
+      if (!visible || queued) return;
+      queued = true;
+      requestAnimationFrame(update);
+    };
+
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(
+        (entries) => {
+          visible = entries[0].isIntersecting;
+          if (visible) update();
+        },
+        { rootMargin: "20% 0px 20% 0px" },
+      ).observe(wrap);
+    } else {
+      visible = true;
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", measure);
+    window.addEventListener("load", measure);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+    measure();
+  }
+</script>

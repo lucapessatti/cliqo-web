@@ -1,14 +1,18 @@
 ---
 import Diana from "./Diana.astro";
 import Logo from "./Logo.astro";
-import { WHATSAPP_URL } from "../config";
+import PeakChart from "./PeakChart.astro";
+import FlowButton from "./FlowButton.astro";
+import { CTA_URL } from "../config";
 
 // EJEMPLO con datos ficticios. No son datos reales de ningún negocio.
+// `pct` = reseñas respecto al máximo del ejemplo (210), para las barras.
 const competidores = [
-  { nombre: "Competidor A", pos: "1.º", resenas: "210", nota: "4,6" },
-  { nombre: "Competidor B", pos: "2.º", resenas: "143", nota: "4,5" },
-  { nombre: "Competidor C", pos: "3.º", resenas: "92", nota: "4,4" },
+  { nombre: "Competidor A", pos: "1.º", resenas: "210", nota: "4,6", pct: 100 },
+  { nombre: "Competidor B", pos: "2.º", resenas: "143", nota: "4,5", pct: 68 },
+  { nombre: "Competidor C", pos: "3.º", resenas: "92", nota: "4,4", pct: 44 },
 ];
+const propiasPct = 18; // 38 de 210
 
 const hallazgos = [
   {
@@ -26,13 +30,13 @@ const hallazgos = [
 ];
 ---
 
-<section id="ejemplo" class="bg-crema text-aubergine">
+<section id="ejemplo" data-section class="bg-crema text-aubergine">
   <div class="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
     <Diana clase="h-8 w-8 text-verde-oscuro" />
 
-    <div class="mt-7 flex flex-wrap items-end justify-between gap-4">
+    <div data-reveal class="mt-7 flex flex-wrap items-end justify-between gap-4">
       <h2 class="titulo max-w-3xl text-[clamp(2rem,6vw,4rem)]">
-        Así se ve una auditoría Cliqo.
+        Así se ve un diagnóstico Cliqo.
       </h2>
       <span class="titulo rounded-md bg-aubergine px-3 py-2 text-[0.7rem] text-crema">
         Ejemplo con datos ficticios
@@ -40,7 +44,13 @@ const hallazgos = [
     </div>
 
     <!-- Resumen de una página (reconstruido) -->
-    <div class="mt-10 max-w-2xl rounded-2xl border-2 border-aubergine bg-crema p-6 sm:p-9">
+    <!-- Capítulo 5: se ve de un vistazo. Las barras de reseñas crecen y las tres pérdidas entran una a una. -->
+    <div class="mt-10 grid gap-10 lg:grid-cols-[minmax(0,42rem)_minmax(0,28rem)] lg:items-start lg:gap-8">
+    <div
+      data-reveal
+      data-story
+      class="audit max-w-2xl rounded-2xl border-2 border-aubergine bg-crema p-6 sm:p-9"
+    >
       <div class="flex items-center justify-between gap-3">
         <Logo tono="aubergine" clase="text-xl" />
         <span class="text-xs font-semibold text-texto-suave">Resumen de una página</span>
@@ -50,7 +60,7 @@ const hallazgos = [
         Cafetería Ejemplo
       </h3>
       <p class="mt-2 text-sm text-texto-suave">
-        Búsqueda: «cafetería en Torrent» · Ejemplo con datos ficticios
+        Búsqueda: «cafetería cerca de mí»
       </p>
 
       <!-- Hallazgo principal -->
@@ -77,7 +87,14 @@ const hallazgos = [
           <tr class="bg-verde font-bold text-aubergine">
             <td class="rounded-l-md py-2.5 pl-2">Cafetería Ejemplo</td>
             <td class="py-2.5 text-right">4.º</td>
-            <td class="py-2.5 text-right">38</td>
+            <td class="py-2.5 text-right">
+              <span class="inline-flex items-center justify-end gap-2">
+                <span class="track" aria-hidden="true">
+                  <span class="bar bar-propia" style={`width: ${propiasPct}%`} />
+                </span>
+                <span>38</span>
+              </span>
+            </td>
             <td class="rounded-r-md py-2.5 pr-2 text-right">4,3</td>
           </tr>
           {
@@ -85,7 +102,14 @@ const hallazgos = [
               <tr class="border-b border-aubergine/15 text-aubergine">
                 <td class="py-2.5 pl-2">{c.nombre}</td>
                 <td class="py-2.5 text-right">{c.pos}</td>
-                <td class="py-2.5 text-right">{c.resenas}</td>
+                <td class="py-2.5 text-right">
+                  <span class="inline-flex items-center justify-end gap-2">
+                    <span class="track" aria-hidden="true">
+                      <span class="bar" style={`width: ${c.pct}%`} />
+                    </span>
+                    <span>{c.resenas}</span>
+                  </span>
+                </td>
                 <td class="py-2.5 pr-2 text-right">{c.nota}</td>
               </tr>
             ))
@@ -93,8 +117,7 @@ const hallazgos = [
         </tbody>
       </table>
       <p class="mt-3 text-xs text-texto-suave">
-        Google Maps, en incógnito, desde 3 puntos cercanos al local · datos
-        ficticios de ejemplo.
+        Google Maps, en incógnito, desde 3 puntos cercanos al local.
       </p>
 
       <!-- Tres hallazgos -->
@@ -104,7 +127,10 @@ const hallazgos = [
       <ul class="mt-4">
         {
           hallazgos.map((h, i) => (
-            <li class="flex gap-4 border-t border-aubergine/15 py-4">
+            <li
+              class="hallazgo flex gap-4 border-t border-aubergine/15 py-4"
+              style={`--d: ${700 + i * 120}ms`}
+            >
               <span class="titulo flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-aubergine text-sm text-crema">
                 {i + 1}
               </span>
@@ -121,7 +147,7 @@ const hallazgos = [
       <div class="mt-8 rounded-xl bg-verde p-5 text-aubergine">
         <p class="titulo text-lg">¿Lo vemos en 15 minutos?</p>
         <p class="mt-1 font-semibold">Te explico cada punto y qué haría primero.</p>
-        <p class="mt-3 text-sm font-semibold">Luca · Cliqo · @tuinstagram</p>
+        <p class="mt-3 text-sm font-semibold">Luca · Cliqo · luca@cliqo.es</p>
       </div>
 
       <p class="mt-5 text-xs text-texto-suave">
@@ -130,11 +156,67 @@ const hallazgos = [
       </p>
     </div>
 
-    <a
-      href={WHATSAPP_URL}
-      class="titulo mt-10 inline-block rounded-lg bg-verde px-7 py-4 text-sm text-aubergine transition-transform hover:scale-[1.03]"
-    >
-      ¿Quieres ver la tuya?
-    </a>
+    <!-- Después del diagnóstico: línea base y seguimiento mensual (paso 4 del método). -->
+    <div data-reveal style="--d: 150ms">
+      <h3 class="titulo titulo-aire mb-4 text-xl sm:text-2xl">Y cada mes, lo medimos.</h3>
+      <PeakChart />
+      <p class="mt-4 max-w-md text-xs leading-relaxed text-texto-suave">
+        Fijamos una línea base y comprobamos cada mes qué ha cambiado; no
+        prometemos resultados.
+      </p>
+    </div>
+    </div>
+
+    <div class="mt-10">
+      <FlowButton href={CTA_URL} text="¿Quieres ver el tuyo?" size="md" tone="claro" />
+    </div>
   </div>
 </section>
+
+<style>
+  /* Barras de reseñas dentro de la tabla (datos ficticios del ejemplo). */
+  .track {
+    display: inline-block;
+    width: 2.5rem;
+    height: 0.5rem;
+    overflow: hidden;
+    border-radius: 4px;
+    background: rgba(53, 30, 40, 0.14);
+  }
+  @media (min-width: 640px) {
+    .track { width: 3.5rem; }
+  }
+  .bar {
+    display: block;
+    height: 100%;
+    border-radius: 4px;
+    background: #5b4650;
+    transform-origin: left;
+    transition: transform 700ms var(--ease-out) 450ms;
+  }
+  .bar-propia {
+    background: #351e28;
+  }
+  :global(html.js) .audit:not(.in) .bar {
+    transform: scaleX(0);
+  }
+
+  /* Las tres cosas que cuestan clientes entran una a una. */
+  :global(html.js) .audit .hallazgo {
+    opacity: 0;
+    transform: translateY(8px);
+    transition:
+      opacity 400ms var(--ease-out),
+      transform 400ms var(--ease-out);
+    transition-delay: var(--d, 0ms);
+  }
+  :global(html.js) .audit.in .hallazgo {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bar { transition-duration: 0ms; transition-delay: 0ms; }
+    :global(html.js) .audit .hallazgo { transform: none; transition-duration: 200ms; }
+  }
+</style>

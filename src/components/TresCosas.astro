@@ -1,6 +1,7 @@
 ---
 import Diana from "./Diana.astro";
-import { WHATSAPP_URL } from "../config";
+import FlowButton from "./FlowButton.astro";
+import { CTA_URL } from "../config";
 
 const preguntas = [
   "¿Tu horario es el real?",
@@ -9,34 +10,112 @@ const preguntas = [
 ];
 ---
 
-<section class="bg-crema text-aubergine">
+<section data-section class="bg-crema text-aubergine">
   <div class="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
     <Diana clase="h-8 w-8 text-verde-oscuro" />
 
-    <h2 class="titulo mt-7 max-w-3xl text-[clamp(2rem,6vw,4rem)]">
+    <h2 data-reveal class="titulo titulo-aire mt-7 max-w-3xl text-[clamp(2rem,6vw,4rem)]">
       ¿Qué dice tu ficha de Google de tu negocio?
     </h2>
 
-    <div class="mt-12 grid gap-4 sm:grid-cols-3">
-      {
-        preguntas.map((p) => (
-          <div class="rounded-xl bg-aubergine p-7 text-crema">
-            <p class="text-xl font-bold leading-snug">{p}</p>
-          </div>
-        ))
-      }
+    <!-- Capítulo 2: revisamos. Una línea recorre las tarjetas y cada una «se marca». -->
+    <div class="scan-wrap relative mt-12 overflow-hidden" data-story>
+      <div class="grid gap-4 sm:grid-cols-3">
+        {
+          preguntas.map((p, i) => (
+            <div
+              class="card relative overflow-hidden rounded-xl bg-aubergine p-7 text-crema"
+              style={`--d: ${i * 90}ms; --p: ${380 + i * 220}ms`}
+            >
+              <span class="ping" aria-hidden="true" />
+              <p class="pr-6 text-xl font-bold leading-snug">{p}</p>
+            </div>
+          ))
+        }
+      </div>
+      <span class="scan" aria-hidden="true"></span>
     </div>
 
-    <div class="mt-12 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+    <div
+      data-reveal
+      class="mt-12 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between"
+    >
       <p class="max-w-md text-lg font-semibold text-texto-suave">
         Si dudas en alguna, es justo lo que miramos.
       </p>
-      <a
-        href={WHATSAPP_URL}
-        class="titulo inline-block shrink-0 rounded-lg bg-verde px-7 py-4 text-sm text-aubergine transition-transform hover:scale-[1.03]"
-      >
-        Pedir mini-auditoría gratis
-      </a>
+      <div class="shrink-0">
+        <FlowButton href={CTA_URL} text="Pedir diagnóstico gratis" size="md" tone="claro" />
+      </div>
     </div>
   </div>
 </section>
+
+<style>
+  :global(html.js) .scan-wrap .card {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity var(--duration-enter) var(--ease-out),
+      transform var(--duration-enter) var(--ease-out);
+    transition-delay: var(--d, 0ms);
+  }
+  :global(html.js) .scan-wrap.in .card {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Línea de revisión: de izquierda a derecha, una vez. */
+  .scan {
+    position: absolute;
+    inset: 0;
+    border-right: 3px solid #2f6b3a;
+    opacity: 0;
+    transform: translateX(-100%);
+    pointer-events: none;
+  }
+  .scan-wrap.in .scan {
+    animation: scan 900ms var(--ease-in-out) 150ms forwards;
+  }
+  @keyframes scan {
+    0% { opacity: 1; transform: translateX(-100%); }
+    85% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(0); }
+  }
+
+  /* Punto de cada tarjeta: se enciende y lanza una onda cuando pasa la línea. */
+  .ping {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 9999px;
+    background: #78ab6b;
+    transition: background-color 200ms var(--ease-out);
+    transition-delay: var(--p, 0ms);
+  }
+  .ping::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 2px solid #78ab6b;
+    opacity: 0;
+  }
+  :global(html.js) .scan-wrap:not(.in) .ping {
+    background: rgba(255, 253, 180, 0.3);
+  }
+  .scan-wrap.in .ping::after {
+    animation: ping 700ms var(--ease-out) var(--p, 0ms) forwards;
+  }
+  @keyframes ping {
+    from { opacity: 0.9; transform: scale(1); }
+    to { opacity: 0; transform: scale(3.4); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) .scan-wrap .card { transform: none; transition-duration: 200ms; }
+    .scan-wrap.in .scan,
+    .scan-wrap.in .ping::after { animation: none; }
+  }
+</style>

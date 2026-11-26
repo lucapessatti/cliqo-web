@@ -4,22 +4,19 @@ import Logo from "./Logo.astro";
 import { SHOW_PEOPLE_PHOTOS } from "../config";
 ---
 
-<section id="quienes-somos" class="bg-crema text-aubergine">
+<section id="quienes-somos" data-section class="bg-crema text-aubergine">
   <div class="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
     <Diana clase="h-8 w-8 text-verde-oscuro" />
 
     <div class="mt-7 grid gap-12 md:grid-cols-[1.4fr_1fr] md:items-center md:gap-16">
       <div>
-        <h2 class="titulo max-w-2xl text-[clamp(2rem,6vw,4rem)]">
+        <h2 data-reveal class="titulo max-w-2xl text-[clamp(2rem,6vw,4rem)]">
           Detrás de Cliqo está Luca.
         </h2>
-        <p class="mt-6 max-w-xl text-lg leading-relaxed text-aubergine">
-          Máster en análisis de datos. Ayudo a negocios de Torrent y alrededores
-          a que los encuentren y los elijan: miro los números, encuentro qué
-          falla y lo pongo en marcha.
-        </p>
-        <p class="mt-4 max-w-xl text-lg leading-relaxed text-texto-suave">
-          Para la parte de imagen y contenido cuento con Vero como colaboradora.
+        <p data-reveal style="--d: 100ms" class="mt-6 max-w-xl text-lg leading-relaxed text-aubergine">
+          Máster en análisis de datos. Ayudo a negocios locales a que los
+          encuentren y los elijan: miro los números, encuentro qué falla y lo
+          pongo en marcha.
         </p>
       </div>
 
@@ -29,7 +26,10 @@ import { SHOW_PEOPLE_PHOTOS } from "../config";
             {/* TODO: foto real de Luca (escala de grises) */}
           </div>
         ) : (
-          <div class="flex aspect-square w-full items-center justify-center rounded-2xl bg-aubergine">
+          <div
+            data-story
+            class="quien-card flex aspect-square w-full items-center justify-center rounded-2xl bg-aubergine"
+          >
             <Logo tono="crema" clase="text-5xl" />
           </div>
         )
@@ -37,3 +37,30 @@ import { SHOW_PEOPLE_PHOTOS } from "../config";
     </div>
   </div>
 </section>
+
+<style>
+  /* Capítulo 7: hay alguien detrás. La diana del logo gira hasta asentarse y luego aparece la palabra. */
+  :global(html.js) .quien-card :global(svg) {
+    opacity: 0;
+    transform: rotate(-140deg) scale(0.7);
+    transition:
+      opacity 400ms var(--ease-out),
+      transform 900ms var(--ease-in-out);
+  }
+  :global(html.js) .quien-card :global(.titulo) {
+    opacity: 0;
+    transition: opacity 400ms var(--ease-out) 600ms;
+  }
+  :global(html.js) .quien-card.in :global(svg),
+  :global(html.js) .quien-card.in :global(.titulo) {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) .quien-card :global(svg) {
+      transform: none;
+      transition-duration: 200ms;
+    }
+  }
+</style>

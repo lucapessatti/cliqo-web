@@ -1,6 +1,7 @@
 ---
 import Logo from "./Logo.astro";
-import { WHATSAPP_URL } from "../config";
+import FlowButton from "./FlowButton.astro";
+import { CTA_URL } from "../config";
 
 const enlaces = [
   { texto: "Qué hacemos", href: "#que-hacemos" },
@@ -28,11 +29,8 @@ const enlaces = [
       }
     </div>
 
-    <a
-      href={WHATSAPP_URL}
-      class="titulo hidden rounded-lg bg-verde px-5 py-3 text-xs text-aubergine transition-transform hover:scale-[1.03] sm:inline-block"
-    >
-      Pedir mini-auditoría
-    </a>
+    <div class="hidden sm:block">
+      <FlowButton href={CTA_URL} text="Pedir diagnóstico" size="sm" tone="oscuro" />
+    </div>
   </nav>
 </header>

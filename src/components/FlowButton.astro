@@ -1,0 +1,165 @@
+---
+// Botón «flow»: al pasar el cursor (o enfocarlo con el teclado), un círculo crece desde
+// el centro y rellena el botón, la forma pasa de píldora a esquinas más rectas, el texto
+// se desplaza y la flecha sale por un lado mientras entra otra por el otro.
+// Adaptado de un componente de React a Astro + CSS, con los colores de marca y acabado
+// mate (colores planos, sin sombras). Funciona como enlace (`href`) o como botón.
+//
+// tone="oscuro": para fondos aubergine o verde. Reposo verde con texto aubergine;
+//                al activarse se rellena de crema (texto aubergine).
+// tone="claro":  para fondos crema. Reposo verde con texto aubergine; al activarse se
+//                rellena de aubergine (texto crema).
+interface Props {
+  text: string;
+  href?: string;
+  tone?: "oscuro" | "claro";
+  size?: "sm" | "md" | "lg";
+  block?: boolean;
+  id?: string;
+  class?: string;
+  type?: "button" | "submit";
+}
+const { text, href, tone = "oscuro", size = "md", block = false, id, class: extra = "", type = "button" } = Astro.props;
+const Tag = href ? "a" : "button";
+---
+
+<Tag
+  id={id}
+  href={href}
+  type={href ? undefined : type}
+  class:list={["flow", "titulo", `flow-${size}`, block && "flow-block", extra]}
+  data-tone={tone}
+>
+  <!-- Flecha que entra por la izquierda -->
+  <svg class="flow-arr flow-arr-l" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M5 12h14"></path>
+    <path d="m12 5 7 7-7 7"></path>
+  </svg>
+
+  <span class="flow-text">{text}</span>
+
+  <!-- Círculo que rellena el botón -->
+  <span class="flow-circle" aria-hidden="true"></span>
+
+  <!-- Flecha que sale por la derecha -->
+  <svg class="flow-arr flow-arr-r" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M5 12h14"></path>
+    <path d="m12 5 7 7-7 7"></path>
+  </svg>
+</Tag>
+
+<style>
+  .flow {
+    --flow-fill: #fffdb4;
+    --flow-on: #351e28;
+    --px: 2.4rem;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 0.95rem var(--px);
+    border: 1.5px solid #351e28;
+    border-radius: 100px;
+    background: #78ab6b;
+    color: #351e28;
+    font-size: 0.875rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      border-radius 500ms var(--ease-out),
+      color 300ms var(--ease-out),
+      transform 160ms var(--ease-out);
+  }
+  .flow[data-tone="claro"] {
+    --flow-fill: #351e28;
+    --flow-on: #fffdb4;
+  }
+  @media (min-width: 640px) {
+    .flow { --px: 2.7rem; }
+  }
+
+  .flow-sm { padding-block: 0.7rem; font-size: 0.75rem; --px: 2.1rem; }
+  .flow-lg { padding-block: 1.2rem; font-size: 0.9rem; }
+  @media (min-width: 640px) {
+    .flow-lg { font-size: 1rem; }
+  }
+  .flow-block { display: flex; width: 100%; }
+
+  .flow:active { transform: scale(0.97); }
+
+  .flow-text {
+    position: relative;
+    z-index: 1;
+    transform: translateX(-0.45rem);
+    transition: transform 500ms var(--ease-out);
+    white-space: nowrap;
+  }
+
+  /* Círculo: ocupa 150 % del ancho del botón para cubrirlo entero, también en las esquinas. */
+  .flow-circle {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 0;
+    width: 150%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--flow-fill);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.04);
+    transition:
+      transform 600ms var(--ease-out),
+      opacity 300ms var(--ease-out);
+    pointer-events: none;
+  }
+
+  .flow-arr {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    width: 1rem;
+    height: 1rem;
+    margin-top: -0.5rem;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition:
+      left 500ms var(--ease-out),
+      right 500ms var(--ease-out);
+  }
+  .flow-arr-l { left: -25%; }
+  .flow-arr-r { right: 1rem; }
+
+  /* Estado activo: ratón encima (solo dispositivos con ratón) o foco de teclado. */
+  @media (hover: hover) and (pointer: fine) {
+    .flow:hover { border-color: transparent; border-radius: 12px; color: var(--flow-on); }
+    .flow:hover .flow-text { transform: translateX(0.45rem); }
+    .flow:hover .flow-circle { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    .flow:hover .flow-arr-l { left: 1rem; }
+    .flow:hover .flow-arr-r { right: -25%; }
+  }
+  .flow:focus-visible {
+    border-color: transparent;
+    border-radius: 12px;
+    color: var(--flow-on);
+    outline: 3px solid #78ab6b;
+    outline-offset: 3px;
+  }
+  .flow:focus-visible .flow-text { transform: translateX(0.45rem); }
+  .flow:focus-visible .flow-circle { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  .flow:focus-visible .flow-arr-l { left: 1rem; }
+  .flow:focus-visible .flow-arr-r { right: -25%; }
+
+  /* Movimiento reducido: el cambio de color y de forma se mantiene, sin desplazamientos ni círculo. */
+  @media (prefers-reduced-motion: reduce) {
+    .flow,
+    .flow-text,
+    .flow-circle,
+    .flow-arr { transition-duration: 0ms !important; }
+    .flow-text,
+    .flow:hover .flow-text,
+    .flow:focus-visible .flow-text { transform: none; }
+  }
+</style>

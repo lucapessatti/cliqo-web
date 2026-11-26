@@ -7,12 +7,25 @@
   --color-verde-oscuro: #2f6b3a;
   --color-texto-suave: #5b4650;
 
-  /* Opcionales: pendientes de confirmar con Vero. No usar por defecto. */
+  /* Opcionales: pendientes de confirmar. No usar por defecto. */
   --color-naranja: #ff5c34;
   --color-azul: #1800ad;
 
   --font-titulo: "Archivo Black", Inter, system-ui, sans-serif;
   --font-texto: Inter, system-ui, sans-serif;
+}
+
+/* Tokens de movimiento. `static` para que se emitan siempre (los usa CSS escrito
+   a mano, p. ej. Intro.astro, que Tailwind no escanea). La utilidad `ease-out`
+   de Tailwind pasa a ser esta curva fuerte. */
+@theme static {
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}
+
+:root {
+  --duration-press: 150ms;
+  --duration-enter: 450ms;
 }
 
 html {
@@ -28,12 +41,80 @@ body {
   font-family: var(--font-titulo);
   font-weight: 400;
   text-transform: uppercase;
-  line-height: 0.92;
+  line-height: 1.04; /* 0,92 hacía que acentos y la cola del «¿» pisaran la línea vecina */
   letter-spacing: 0.004em;
+}
+/* Titulares con «¿»: un poco más de aire para que su cola no toque la línea de abajo. */
+.titulo-aire {
+  line-height: 1.14;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+}
+
+/* ------------------------------------------------------------------
+   Historia de movimiento: «De invisible a elegido»
+   Un observador (Layout.astro) añade `.in` a los elementos con
+   [data-reveal], [data-section] y [data-story] al entrar en pantalla.
+   Todo se oculta solo si hay JS (html.js); sin JS la web se ve entera.
+   ------------------------------------------------------------------ */
+
+/* Entrada genérica: fundido + subida corta. */
+html.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity var(--duration-enter) var(--ease-out),
+    transform var(--duration-enter) var(--ease-out);
+  transition-delay: var(--d, 0ms);
+}
+html.js [data-reveal].in {
+  opacity: 1;
+  transform: none;
+}
+
+/* Marcador de sección: la diana «aterriza» al llegar a cada sección. */
+html.js [data-section] > div > .diana-mark {
+  opacity: 0;
+  transform: scale(0.6) rotate(-90deg);
+  transition:
+    opacity 400ms var(--ease-out),
+    transform 500ms var(--ease-out);
+}
+html.js [data-section].in > div > .diana-mark {
+  opacity: 1;
+  transform: none;
+}
+
+/* Preguntas frecuentes: el contenido se despliega en vez de saltar.
+   Mejora progresiva (Chrome 131+); en otros navegadores se abre sin animar. */
+details {
+  interpolate-size: allow-keywords;
+}
+details::details-content {
+  block-size: 0;
+  overflow: hidden;
+  transition:
+    block-size 250ms var(--ease-out),
+    content-visibility 250ms allow-discrete;
+}
+details[open]::details-content {
+  block-size: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.js [data-reveal] {
+    transform: none;
+    transition-duration: 200ms;
+  }
+  html.js [data-section] > div > .diana-mark {
+    transform: none;
+    transition: opacity 200ms ease;
+  }
+  details::details-content {
+    transition: none;
   }
 }

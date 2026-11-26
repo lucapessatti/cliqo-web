@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { SITE_URL } from "../config";
 
 interface Props {
   title?: string;
@@ -7,10 +8,13 @@ interface Props {
 }
 
 const {
-  title = "Cliqo · Consultoría para negocios locales de Torrent",
+  title = "Cliqo · Datos, marketing y procesos para negocios locales",
   description =
-    "Te decimos qué te está costando clientes, con datos. Consultoría para negocios locales de Torrent y alrededores: analizamos tu ficha de Google, tus redes y tus números, y lo contamos con buena imagen.",
+    "Te decimos qué te está costando clientes, con datos. Análisis de datos, marketing digital y mejora de procesos para negocios locales: revisamos tu ficha de Google, tus redes y tus números.",
 } = Astro.props;
+
+const ruta = Astro.url.pathname.replace(/\/?$/, "/");
+const canonical = new URL(ruta, SITE_URL).href;
 ---
 
 <!doctype html>
@@ -19,14 +23,18 @@ const {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#351e28" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
 
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Cliqo" />
+    <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:locale" content="es_ES" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:card" content="summary" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -37,5 +45,28 @@ const {
   </head>
   <body class="bg-aubergine font-texto text-crema antialiased">
     <slot />
+
+    <script>
+      // Historia de movimiento: añade `.in` a cada elemento al entrar en pantalla (una sola vez).
+      const root = document.documentElement;
+      root.classList.add("reveal-ready");
+      const targets = document.querySelectorAll("[data-reveal],[data-section],[data-story]");
+      if (!("IntersectionObserver" in window)) {
+        targets.forEach((t) => t.classList.add("in"));
+      } else {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                e.target.classList.add("in");
+                io.unobserve(e.target);
+              }
+            }
+          },
+          { threshold: 0.15, rootMargin: "0px 0px -6% 0px" },
+        );
+        targets.forEach((t) => io.observe(t));
+      }
+    </script>
   </body>
 </html>

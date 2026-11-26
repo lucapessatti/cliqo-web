@@ -1,13 +1,51 @@
 ---
 // Botón de acción fijo abajo, solo en móvil.
-import { WHATSAPP_URL } from "../config";
+// Entra desde abajo cuando el botón del hero sale de pantalla y se retira
+// cuando el botón del cierre es visible (así nunca se duplica uno encima de otro).
+import { CTA_URL } from "../config";
+import FlowButton from "./FlowButton.astro";
 ---
 
-<div class="fixed inset-x-0 bottom-0 z-50 border-t border-aubergine/20 bg-crema p-3 sm:hidden">
-  <a
-    href={WHATSAPP_URL}
-    class="titulo block rounded-lg bg-verde py-4 text-center text-sm text-aubergine"
-  >
-    Pedir mini-auditoría gratis
-  </a>
+<div class="boton-movil fixed inset-x-0 bottom-0 z-50 border-t border-aubergine/20 bg-crema p-3 sm:hidden">
+  <FlowButton href={CTA_URL} text="Pedir diagnóstico gratis" size="md" tone="claro" block />
 </div>
+
+<style>
+  .boton-movil {
+    transition:
+      transform 250ms var(--ease-out),
+      visibility 0s;
+  }
+  :global(html.js) .boton-movil:not(.show) {
+    transform: translateY(100%);
+    visibility: hidden;
+    transition:
+      transform 250ms var(--ease-out),
+      visibility 0s 250ms;
+  }
+</style>
+
+<script>
+  const bar = document.querySelector<HTMLElement>(".boton-movil");
+  const hero = document.getElementById("cta-hero");
+  const cierre = document.getElementById("cta-cierre");
+
+  if (bar) {
+    if (hero && cierre && "IntersectionObserver" in window) {
+      let heroVisible = true;
+      let cierreVisible = false;
+      const update = () => bar.classList.toggle("show", !heroVisible && !cierreVisible);
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.target === hero) heroVisible = e.isIntersecting;
+          else cierreVisible = e.isIntersecting;
+        }
+        update();
+      });
+      io.observe(hero);
+      io.observe(cierre);
+    } else {
+      bar.classList.add("show");
+    }
+  }
+</script>

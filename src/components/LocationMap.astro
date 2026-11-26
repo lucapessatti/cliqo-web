@@ -1,0 +1,289 @@
+---
+// Mapa del hero: un cruce de cuatro calles con carretera marcada (asfalto, línea
+// central discontinua y pasos de cebra), aceras y edificios, y «Tu negocio»
+// señalado con un pin sobre uno de ellos. Un cursor de bordes suaves llega y hace
+// clic en el pin.
+//
+// Acabado mate de marca: colores planos de la paleta, sin degradados, brillos ni
+// sombras. Solo CSS y unas líneas de JS; sin librerías.
+//
+// Coordenadas del mapa (viewBox 360 × 280). El cruce está en (96, 80); el negocio
+// ocupa el centro del mapa para que se vea también al recortar en móvil.
+const aceraH = { y: 50, h: 60 };
+const asfaltoH = { y: 58, h: 44 };
+const aceraV = { x: 66, w: 60 };
+const asfaltoV = { x: 74, w: 44 };
+
+// Edificios [x, y, ancho, alto]: manzanas alineadas con las aceras, ninguno sobre una calle.
+const edificios = [
+  // arriba a la izquierda
+  [6, 8, 26, 34], [36, 14, 22, 28],
+  // arriba a la derecha
+  [134, 6, 34, 36], [174, 10, 40, 32], [222, 6, 30, 36], [260, 12, 44, 30], [312, 6, 40, 36],
+  // abajo a la izquierda
+  [6, 118, 26, 44], [36, 118, 24, 36], [6, 170, 22, 38], [34, 164, 26, 52], [6, 216, 28, 50], [38, 224, 22, 42],
+  // abajo a la derecha (primera fila, segunda y tercera)
+  [132, 118, 16, 44], [214, 118, 38, 44], [258, 118, 44, 44], [308, 118, 40, 44],
+  [134, 170, 38, 40], [178, 170, 36, 40], [220, 170, 40, 40], [266, 170, 36, 40], [308, 170, 40, 40],
+  [134, 218, 44, 50], [184, 218, 50, 50], [240, 218, 40, 50],
+];
+const parque = [286, 218, 62, 50];
+const negocio = [152, 118, 56, 44];
+
+// Pasos de cebra: franjas paralelas al tráfico, pegadas al cruce.
+const franjasOeste = Array.from({ length: 7 }, (_, i) => [56, 61 + i * 6, 14, 3.2]);
+const franjasEste = Array.from({ length: 7 }, (_, i) => [122, 61 + i * 6, 14, 3.2]);
+const franjasNorte = Array.from({ length: 7 }, (_, i) => [77 + i * 6, 42, 3.2, 14]);
+const franjasSur = Array.from({ length: 7 }, (_, i) => [77 + i * 6, 104, 3.2, 14]);
+const cebras = [...franjasOeste, ...franjasEste, ...franjasNorte, ...franjasSur];
+---
+
+<div class="lm" data-lm>
+  <div
+    class="lm-card"
+    data-lm-card
+    role="img"
+    aria-label="Mapa de ejemplo: «Tu negocio» señalado con un pin sobre un edificio, junto a un cruce de cuatro calles."
+  >
+    <svg class="lm-map" viewBox="0 0 360 280" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <!-- Suelo -->
+      <rect width="360" height="280" fill="#e7e2a3"></rect>
+
+      <!-- Aceras -->
+      <rect class="lm-walk lm-gx" x="0" y={aceraH.y} width="360" height={aceraH.h}></rect>
+      <rect class="lm-walk lm-gy" x={aceraV.x} y="0" width={aceraV.w} height="280"></rect>
+
+      <!-- Carretera: asfalto de las dos calles que se cruzan -->
+      <rect class="lm-road lm-gx" x="0" y={asfaltoH.y} width="360" height={asfaltoH.h}></rect>
+      <rect class="lm-road lm-gy" x={asfaltoV.x} y="0" width={asfaltoV.w} height="280"></rect>
+
+      <!-- Marcas viales: línea central discontinua en los cuatro brazos y pasos de cebra -->
+      <g class="lm-mark">
+        <path class="lm-dash" d="M0 80 H70 M122 80 H360 M96 0 V54 M96 106 V280"></path>
+        {cebras.map(([x, y, w, h]) => <rect class="lm-zebra" x={x} y={y} width={w} height={h} rx="0.6"></rect>)}
+      </g>
+
+      <!-- Edificios -->
+      <g class="lm-blocks">
+        {
+          edificios.map(([x, y, w, h], i) => (
+            <rect
+              class={`lm-b lm-t${i % 3}`}
+              x={x}
+              y={y}
+              width={w}
+              height={h}
+              rx="2"
+              style={`--d:${700 + (i % 8) * 40}ms`}
+            ></rect>
+          ))
+        }
+        <rect class="lm-b lm-park" x={parque[0]} y={parque[1]} width={parque[2]} height={parque[3]} rx="3" style="--d:1000ms"></rect>
+        <rect class="lm-b lm-biz" x={negocio[0]} y={negocio[1]} width={negocio[2]} height={negocio[3]} rx="2" style="--d:900ms"></rect>
+      </g>
+
+      <!-- Pin sobre el edificio del negocio: la punta cae en el centro del edificio -->
+      <g transform="translate(180 140)">
+        <g class="lm-pin">
+          <g transform="scale(2) translate(-12 -22)">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"></path>
+            <circle cx="12" cy="9" r="2.6"></circle>
+          </g>
+        </g>
+      </g>
+      <circle class="lm-click" cx="180" cy="114" r="12"></circle>
+
+      <!-- Etiqueta del pin -->
+      <g class="lm-tag">
+        <rect x="204" y="103" width="88" height="22" rx="7"></rect>
+        <text x="248" y="118" text-anchor="middle">TU NEGOCIO</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Cursor de bordes suaves que hace clic en el pin (decorativo; se retira cuando la persona usa el suyo) -->
+  <span class="lm-cursor" aria-hidden="true">
+    <svg viewBox="-4 -4 40 56" width="38" height="52">
+      <path d="M0 0 L0 38 L9.5 29.5 L16 44 L22.5 41 L16 26.5 L28 26.5 Z"></path>
+    </svg>
+  </span>
+</div>
+
+<style>
+  /* Zona del mapa: móvil apaisada, escritorio 9:7. El mapa llena la tarjeta. */
+  .lm {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    container-type: size;
+    perspective: 900px;
+  }
+  @media (min-width: 768px) {
+    .lm { aspect-ratio: 9 / 7; }
+  }
+
+  .lm-card {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: 1rem;
+    background: #e7e2a3;
+    transition: transform 160ms var(--ease-out);
+  }
+  .lm-map {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* ---- Colores planos de la paleta ---- */
+  .lm-walk { fill: #fffdb4; fill-opacity: 0.7; }
+  .lm-road { fill: #5b4650; }
+  .lm-dash {
+    fill: none;
+    stroke: #fffdb4;
+    stroke-width: 2;
+    stroke-dasharray: 9 7;
+  }
+  .lm-zebra { fill: #fffdb4; }
+
+  .lm-b {
+    fill: #351e28;
+    stroke: #351e28;
+    stroke-opacity: 0.3;
+    stroke-width: 1;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .lm-t0 { fill-opacity: 0.16; }
+  .lm-t1 { fill-opacity: 0.22; }
+  .lm-t2 { fill-opacity: 0.28; }
+  .lm-park { fill: #78ab6b; fill-opacity: 0.7; stroke: #2f6b3a; stroke-opacity: 0.4; }
+  .lm-biz { fill-opacity: 0.78; stroke-opacity: 0.9; }
+
+  .lm-pin path { fill: #78ab6b; stroke: #351e28; stroke-width: 0.9; stroke-linejoin: round; }
+  .lm-pin circle { fill: #351e28; }
+  .lm-click {
+    fill: none;
+    stroke: #351e28;
+    stroke-width: 2.5;
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  .lm-tag rect { fill: #fffdb4; stroke: #351e28; stroke-width: 1.2; }
+  .lm-tag text {
+    font-family: var(--font-titulo);
+    font-size: 11.5px;
+    letter-spacing: 0.02em;
+    fill: #351e28;
+  }
+
+  /* Las calles crecen desde el cruce hacia fuera. */
+  .lm-walk, .lm-road, .lm-pin {
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+
+  /* ---- Cursor: bordes suaves (esquinas redondeadas), llega y hace clic en el pin ---- */
+  .lm-cursor {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 3;
+    margin: -4px 0 0 -4px;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(112cqw, 118cqh);
+  }
+  .lm-cursor svg {
+    display: block;
+    transform-origin: 4px 4px;
+  }
+  .lm-cursor path {
+    fill: #fffdb4;
+    stroke: #351e28;
+    stroke-width: 5;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    paint-order: stroke fill;
+  }
+
+  /* Línea de tiempo (ms desde que arranca el hero):
+     calles 200-800 · marcas 700-1100 · edificios 700-1300 · pin cae 1000-1450 · etiqueta 1450
+     · cursor 800-3100 (llega al pin hacia 1950) · clic 1900-2140 · salto, onda 2020 */
+  :global(html.hero-go) .lm-gx { animation: lm-grow-x 600ms var(--ease-out) 200ms both; }
+  :global(html.hero-go) .lm-gy { animation: lm-grow-y 600ms var(--ease-out) 200ms both; }
+  :global(html.hero-go) .lm-mark { animation: lm-fade 400ms var(--ease-out) 700ms both; }
+  :global(html.hero-go) .lm-b { animation: lm-pop 400ms var(--ease-out) var(--d, 700ms) both; }
+  :global(html.hero-go) .lm-pin {
+    animation:
+      lm-drop 450ms var(--ease-out) 1000ms both,
+      lm-hop 280ms var(--ease-out) 2020ms;
+  }
+  :global(html.hero-go) .lm-tag { animation: lm-tag 350ms var(--ease-out) 1450ms both; }
+  :global(html.hero-go) .lm-click { animation: lm-ripple 700ms var(--ease-out) 2020ms forwards; }
+  :global(html.hero-go) .lm-cursor { animation: lm-cursor 2300ms var(--ease-out) 800ms forwards; }
+  :global(html.hero-go) .lm-cursor svg { animation: lm-press 240ms var(--ease-out) 1900ms; }
+
+  @keyframes lm-grow-x { from { transform: scaleX(0.02); } }
+  @keyframes lm-grow-y { from { transform: scaleY(0.02); } }
+  @keyframes lm-fade { from { opacity: 0; } }
+  @keyframes lm-pop { from { opacity: 0; transform: scale(0.85); } }
+  @keyframes lm-drop { from { opacity: 0; transform: translateY(-26px); } }
+  @keyframes lm-hop { 50% { transform: translateY(-9px); } }
+  @keyframes lm-tag { from { opacity: 0; transform: translateX(-6px); } }
+  @keyframes lm-ripple {
+    from { opacity: 0.8; transform: scale(1); }
+    to { opacity: 0; transform: scale(3.5); }
+  }
+  /* El pin está a 50 % del ancho y 26 unidades del mapa (7,2 cqw) por encima del centro:
+     ahí cae la punta del cursor. Después se aparta para dejar ver el pin y la etiqueta. */
+  @keyframes lm-cursor {
+    0% { opacity: 0; transform: translate(112cqw, 118cqh); }
+    10% { opacity: 1; }
+    50% { opacity: 1; transform: translate(50cqw, calc(50cqh - 7.2cqw)); }
+    60% { opacity: 1; transform: translate(50cqw, calc(50cqh - 7.2cqw)); }
+    90%, 100% { opacity: 1; transform: translate(62cqw, calc(50cqh + 6cqw)); }
+  }
+  @keyframes lm-press { 50% { transform: scale(0.84); } }
+
+  /* En cuanto la persona usa su propio cursor, el nuestro se retira. */
+  .lm.user .lm-cursor {
+    opacity: 0 !important;
+    transition: opacity 200ms var(--ease-out);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lm-card { transition-duration: 0ms; }
+    .lm-cursor { display: none; }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-lm]");
+
+  if (root) {
+    const card = root.querySelector<HTMLElement>("[data-lm-card]")!;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+    /* La persona usa su propio cursor: se retira el cursor animado. */
+    root.addEventListener("pointerenter", () => root.classList.add("user"));
+
+    /* Inclinación suave con el ratón (solo escritorio y sin movimiento reducido). */
+    if (fine && !reduce) {
+      root.addEventListener("pointermove", (e) => {
+        const r = root.getBoundingClientRect();
+        const x = (e.clientX - (r.left + r.width / 2)) / (r.width / 2);
+        const y = (e.clientY - (r.top + r.height / 2)) / (r.height / 2);
+        const cx = Math.max(-1, Math.min(1, x));
+        const cy = Math.max(-1, Math.min(1, y));
+        card.style.transform = `rotateX(${(-cy * 6).toFixed(2)}deg) rotateY(${(cx * 6).toFixed(2)}deg)`;
+      });
+      root.addEventListener("pointerleave", () => {
+        card.style.transform = "";
+      });
+    }
+  }
+</script>

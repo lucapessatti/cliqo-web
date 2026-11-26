@@ -1,0 +1,227 @@
+---
+// Cuestionario de contacto: nombre, correo y mensaje. Se envía por correo con el
+// Worker de Cloudflare (worker/index.ts). Si el envío automático falla, la página
+// ofrece un enlace de respaldo que abre el correo del usuario ya rellenado.
+import Layout from "../layouts/Layout.astro";
+import Logo from "../components/Logo.astro";
+import FlowButton from "../components/FlowButton.astro";
+import { EMAIL, ASUNTO_CONTACTO } from "../config";
+---
+
+<Layout
+  title="Pide tu diagnóstico gratis · Cliqo"
+  description="Cuéntanos tu negocio y qué te preocupa. Te respondemos con tu diagnóstico gratis en un máximo de 3 días laborables."
+>
+  <main class="mx-auto max-w-3xl px-5 py-12 sm:px-8 sm:py-20">
+    <a href="/" class="mb-10 inline-block"><Logo tono="crema" clase="text-2xl" /></a>
+
+    <h1 class="titulo titulo-aire text-[clamp(2rem,6vw,3.5rem)] text-crema">
+      Pide tu diagnóstico gratis
+    </h1>
+    <p class="mt-5 max-w-xl text-lg leading-relaxed text-crema/85">
+      Cuéntanos qué negocio tienes y qué te preocupa. Te respondemos en un máximo de 3 días laborables.
+    </p>
+
+    <!-- Estado del envío (lo rellena el script; también se abre con ?ok=1 o ?error=1 si el navegador envió sin JavaScript) -->
+    <div id="estado" class="estado" role="status" aria-live="polite" tabindex="-1" hidden></div>
+
+    <form id="contacto" class="mt-10 grid gap-6" method="post" action="/api/contacto">
+      <div class="campo">
+        <label for="nombre">Tu nombre</label>
+        <input id="nombre" name="nombre" type="text" autocomplete="name" required maxlength="100" />
+      </div>
+
+      <div class="campo">
+        <label for="correo">Tu correo</label>
+        <input id="correo" name="correo" type="email" autocomplete="email" required maxlength="200" />
+      </div>
+
+      <div class="campo">
+        <label for="mensaje">Tu mensaje</label>
+        <textarea
+          id="mensaje"
+          name="mensaje"
+          rows="6"
+          required
+          minlength="10"
+          maxlength="3000"
+          placeholder="Nombre de tu negocio, enlace a tu ficha de Google y qué te preocupa."></textarea>
+      </div>
+
+      <!-- Campo trampa para bots: las personas no lo ven ni lo rellenan -->
+      <div class="trampa" aria-hidden="true">
+        <label>No rellenar <input name="web" type="text" tabindex="-1" autocomplete="off" /></label>
+      </div>
+
+      <label class="consent">
+        <input type="checkbox" name="privacidad" required />
+        <span>
+          He leído la <a href="/privacidad">política de privacidad</a> y acepto que Cliqo use estos datos para
+          responderme.
+        </span>
+      </label>
+
+      <div>
+        <FlowButton text="Enviar" type="submit" size="lg" tone="oscuro" />
+      </div>
+    </form>
+
+    <p class="mt-10 text-sm text-crema/70">
+      ¿Prefieres escribir directamente? <a href={`mailto:${EMAIL}`} class="font-semibold text-verde underline underline-offset-4">{EMAIL}</a>
+    </p>
+  </main>
+</Layout>
+
+<style>
+  .campo {
+    display: grid;
+    gap: 0.5rem;
+  }
+  label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #fffdb4;
+  }
+  input[type="text"],
+  input[type="email"],
+  textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1.5px solid rgba(255, 253, 180, 0.35);
+    border-radius: 0.75rem;
+    background: rgba(255, 253, 180, 0.06);
+    color: #fffdb4;
+    font: inherit;
+    font-size: 1rem;
+    transition: border-color 150ms var(--ease-out);
+  }
+  textarea {
+    resize: vertical;
+    min-height: 9rem;
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: rgba(255, 253, 180, 0.5);
+  }
+  input[type="text"]:focus-visible,
+  input[type="email"]:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid #78ab6b;
+    outline-offset: 2px;
+    border-color: #78ab6b;
+  }
+
+  .consent {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    font-weight: 400;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: rgba(255, 253, 180, 0.85);
+  }
+  .consent input {
+    flex: none;
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-top: 0.2rem;
+    accent-color: #78ab6b;
+  }
+  .consent a {
+    color: #78ab6b;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  /* Campo trampa fuera de pantalla (no display:none, para que los bots lo vean) */
+  .trampa {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+
+  /* Aviso de estado: bloque plano de color de marca */
+  .estado {
+    margin-top: 2rem;
+    padding: 1rem 1.25rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    line-height: 1.5;
+  }
+  .estado[data-tipo="ok"] {
+    background: #78ab6b;
+    color: #351e28;
+  }
+  .estado[data-tipo="error"],
+  .estado[data-tipo="enviando"] {
+    background: #fffdb4;
+    color: #351e28;
+  }
+  .estado a {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .estado:focus-visible {
+    outline: 3px solid #78ab6b;
+    outline-offset: 3px;
+  }
+</style>
+
+<script>
+  import { EMAIL, ASUNTO_CONTACTO } from "../config";
+
+  const form = document.getElementById("contacto") as HTMLFormElement | null;
+  const estado = document.getElementById("estado") as HTMLElement | null;
+
+  if (form && estado) {
+    const boton = form.querySelector<HTMLButtonElement>("button[type=submit]");
+
+    const mostrar = (tipo: "ok" | "error" | "enviando", html: string) => {
+      estado.dataset.tipo = tipo;
+      estado.innerHTML = html;
+      estado.hidden = false;
+      if (tipo !== "enviando") estado.focus();
+    };
+
+    // Respaldo: abre el correo del usuario con el mensaje ya escrito.
+    const enlaceCorreo = () => {
+      const f = new FormData(form);
+      const cuerpo = `Nombre: ${f.get("nombre") ?? ""}\nCorreo: ${f.get("correo") ?? ""}\n\n${f.get("mensaje") ?? ""}`;
+      return `mailto:${EMAIL}?subject=${encodeURIComponent(ASUNTO_CONTACTO)}&body=${encodeURIComponent(cuerpo)}`;
+    };
+    const errorHtml = () =>
+      `No hemos podido enviarlo. <a href="${enlaceCorreo()}">Escríbenos por correo</a> o a ${EMAIL} y te respondemos igual.`;
+
+    // Si el navegador envió el formulario sin JavaScript, el Worker redirige con ?ok=1 o ?error=1.
+    const params = new URLSearchParams(location.search);
+    if (params.get("ok")) {
+      mostrar("ok", "Gracias. Hemos recibido tu mensaje y te respondemos en un máximo de 3 días laborables.");
+    } else if (params.get("error")) {
+      mostrar("error", `No hemos podido enviarlo. Escríbenos a <a href="mailto:${EMAIL}">${EMAIL}</a> y te respondemos igual.`);
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!form.reportValidity()) return;
+      boton?.setAttribute("disabled", "");
+      mostrar("enviando", "Enviando…");
+      try {
+        const res = await fetch("/api/contacto", {
+          method: "POST",
+          body: new FormData(form),
+          headers: { Accept: "application/json" },
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.ok) throw new Error("envio");
+        form.reset();
+        mostrar("ok", "Gracias. Hemos recibido tu mensaje y te respondemos en un máximo de 3 días laborables.");
+      } catch {
+        mostrar("error", errorHtml());
+      } finally {
+        boton?.removeAttribute("disabled");
+      }
+    });
+  }
+</script>

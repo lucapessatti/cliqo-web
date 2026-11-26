@@ -1,0 +1,492 @@
+---
+// Gráfico de ejemplo «Llamadas desde la ficha» (datos FICTICIOS, siempre etiquetado).
+// Adaptado de un componente de React a Astro + TypeScript puro, con acabado mate de
+// marca: fondo aubergine liso, línea verde, punto crema; sin brillos, degradados,
+// desenfoques ni sombras. Cuenta cómo medimos: línea base y seguimiento.
+import { buildCurve, pathFrom, SERIES, W, H, X0, X1, TOP, BOTTOM } from "../lib/peak-curve";
+
+const inicial = SERIES.mes;
+const curva = buildCurve([...inicial.data]);
+const trazo = pathFrom(curva.ys, X0, X1);
+const picoY = curva.ys[Math.round(curva.peakX)];
+const valorPico = Math.max(...inicial.data);
+const lineasGrid = [0, 1, 2, 3].map((i) => TOP + (i * (BOTTOM - TOP)) / 3);
+---
+
+<div class="peak" data-peak>
+  <div class="peak-head">
+    <div class="peak-periods" role="group" aria-label="Periodo del gráfico">
+      {
+        Object.entries(SERIES).map(([k, s]) => (
+          <button type="button" data-period={k} aria-pressed={k === "mes" ? "true" : "false"}>
+            {s.label}
+          </button>
+        ))
+      }
+    </div>
+  </div>
+
+  <div
+    class="peak-plot"
+    data-plot
+    role="img"
+    aria-label={`Gráfico de ejemplo con datos ficticios: llamadas desde la ficha. Punto más alto del periodo: ${valorPico}.`}
+  >
+    <svg class="peak-svg" viewBox={`0 0 ${W} ${H}`} aria-hidden="true">
+      <g class="peak-grid">
+        {lineasGrid.map((y) => <line x1={X0 - 8} x2={X1 + 8} y1={y} y2={y} />)}
+      </g>
+      <line class="peak-base" data-base x1={X0 - 8} x2={X1 + 8} y1={curva.baseY} y2={curva.baseY} />
+      <path class="peak-line" data-line d={trazo}></path>
+      <g data-dotg transform={`translate(${curva.peakX + 6} ${picoY})`}>
+        <circle class="peak-pulse" data-pulse r="9"></circle>
+        <circle class="peak-dot" r="9"></circle>
+      </g>
+    </svg>
+    <span class="peak-baselabel" data-baselabel style={`top:${(curva.baseY / H) * 100}%`}>Línea base</span>
+    <div class="peak-tip" data-tip aria-hidden="true">
+      <span class="peak-tipval" data-tipval></span>
+      <span class="peak-tiplab" data-tiplab></span>
+    </div>
+  </div>
+
+  <div class="peak-foot">
+    <p class="peak-title">Llamadas desde la ficha</p>
+    <div class="peak-numrow">
+      <span class="peak-num titulo" data-num>{valorPico}</span>
+      <svg class="peak-arrow" data-arrow viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M5 19 L19 5 M8 5 H19 V16" />
+      </svg>
+    </div>
+    <p class="peak-cap">Punto más alto del periodo.</p>
+  </div>
+</div>
+
+<style>
+  /* ---- Acabado mate: colores planos de la marca, sin sombras ni degradados ---- */
+  .peak {
+    width: 100%;
+    max-width: 28rem;
+    padding: 1.5rem;
+    border-radius: 1.75rem;
+    background: #351e28;
+    color: #fffdb4;
+  }
+  @media (min-width: 640px) {
+    .peak { padding: 2rem; }
+  }
+
+  .peak-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+
+  .peak-periods {
+    display: inline-flex;
+    padding: 0.2rem;
+    border-radius: 0.65rem;
+    background: rgba(255, 253, 180, 0.08);
+  }
+  .peak-periods button {
+    padding: 0.4rem 0.8rem;
+    border: 0;
+    border-radius: 0.45rem;
+    background: transparent;
+    color: rgba(255, 253, 180, 0.78);
+    font: 600 0.8rem/1 Inter, system-ui, sans-serif;
+    cursor: pointer;
+    transition:
+      background-color 150ms var(--ease-out),
+      color 150ms var(--ease-out);
+  }
+  .peak-periods button[aria-pressed="true"] {
+    background: #78ab6b;
+    color: #351e28;
+  }
+  .peak-periods button:focus-visible {
+    outline: 2px solid #78ab6b;
+    outline-offset: 2px;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .peak-periods button[aria-pressed="false"]:hover { color: #fffdb4; }
+  }
+  /* Sin JS los botones no hacen nada: se ocultan. */
+  :global(html:not(.js)) .peak-periods { display: none; }
+
+  .peak-plot {
+    position: relative;
+    margin-top: 1.25rem;
+    border-radius: 1rem;
+    background: rgba(255, 253, 180, 0.05);
+    touch-action: pan-y;
+    cursor: crosshair;
+  }
+  .peak-svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+  }
+  .peak-grid line {
+    stroke: rgba(255, 253, 180, 0.1);
+    stroke-width: 1;
+    vector-effect: non-scaling-stroke;
+  }
+  .peak-base {
+    stroke: rgba(255, 253, 180, 0.5);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 5;
+    vector-effect: non-scaling-stroke;
+  }
+  .peak-line {
+    fill: none;
+    stroke: #78ab6b;
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .peak-dot {
+    fill: #78ab6b;
+    stroke: #fffdb4;
+    stroke-width: 3;
+  }
+  .peak-pulse {
+    fill: none;
+    stroke: #fffdb4;
+    stroke-width: 2;
+    opacity: 0;
+  }
+  /* Hasta que el script lo prepara, con JS se oculta el trazo estático (sin JS se ve completo). */
+  :global(html.js) .peak:not([data-ready]) .peak-line,
+  :global(html.js) .peak:not([data-ready]) [data-dotg] {
+    visibility: hidden;
+  }
+
+  .peak-baselabel {
+    position: absolute;
+    left: 0.7rem;
+    transform: translateY(0.4rem);
+    font: 600 0.65rem/1 Inter, system-ui, sans-serif;
+    letter-spacing: 0.03em;
+    color: rgba(255, 253, 180, 0.8);
+    pointer-events: none;
+  }
+
+  /* Lectura al pasar el cursor: tarjeta crema lisa, sin desenfoque. */
+  .peak-tip {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: 0.5rem;
+    background: #fffdb4;
+    color: #351e28;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .peak-tipval { font: 700 0.85rem/1 Inter, system-ui, sans-serif; }
+  .peak-tiplab { font: 600 0.7rem/1 Inter, system-ui, sans-serif; color: #5b4650; }
+
+  .peak-foot { margin-top: 1.5rem; }
+  .peak-title {
+    margin: 0;
+    font: 600 0.85rem/1.2 Inter, system-ui, sans-serif;
+    letter-spacing: 0.02em;
+    color: rgba(255, 253, 180, 0.78);
+  }
+  .peak-numrow {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .peak-num {
+    font-size: clamp(3.5rem, 12vw, 5rem);
+    font-variant-numeric: tabular-nums;
+    color: #fffdb4;
+  }
+  .peak-arrow {
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-top: 0.4rem;
+    transform-origin: 0% 100%;
+  }
+  .peak-arrow path {
+    stroke: #78ab6b;
+    stroke-width: 3;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .peak-cap {
+    margin: 0.5rem 0 0;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: rgba(255, 253, 180, 0.72);
+  }
+</style>
+
+<script>
+  import { buildCurve, curveY, pathFrom, SERIES, W, H, X0, X1, TOP, BOTTOM } from "../lib/peak-curve";
+  import type { SeriesKey } from "../lib/peak-curve";
+
+  const root = document.querySelector<HTMLElement>("[data-peak]");
+
+  if (root) {
+    const q = <T extends Element>(sel: string) => root.querySelector<T>(sel)!;
+    const plot = q<HTMLElement>("[data-plot]");
+    const line = q<SVGPathElement>("[data-line]");
+    const base = q<SVGLineElement>("[data-base]");
+    const baseLabel = q<HTMLElement>("[data-baselabel]");
+    const dotG = q<SVGGElement>("[data-dotg]");
+    const pulse = q<SVGCircleElement>("[data-pulse]");
+    const tip = q<HTMLElement>("[data-tip]");
+    const tipVal = q<HTMLElement>("[data-tipval]");
+    const tipLab = q<HTMLElement>("[data-tiplab]");
+    const num = q<HTMLElement>("[data-num]");
+    const arrow = q<SVGElement>("[data-arrow]");
+    const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>("[data-period]"));
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    /* ---- utilidades ---- */
+    const clamp01 = (x: number) => (x < 0 ? 0 : x > 1 ? 1 : x);
+    const smooth = (x: number) => {
+      const t = clamp01(x);
+      return t * t * (3 - 2 * t);
+    };
+    const easeInOut = (x: number) => {
+      const t = clamp01(x);
+      return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+    };
+    const easeOut = (x: number) => 1 - Math.pow(1 - clamp01(x), 3);
+    const backOut = (x: number) => {
+      const t = clamp01(x);
+      const c = 1.9;
+      return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2);
+    };
+    const inverseEase = (target: number) => {
+      let lo = 0;
+      let hi = 1;
+      for (let i = 0; i < 24; i++) {
+        const m = (lo + hi) / 2;
+        if (easeInOut(m) < target) lo = m;
+        else hi = m;
+      }
+      return (lo + hi) / 2;
+    };
+
+    /* ---- línea de tiempo (s): dibujo 0,2-1,7 · número 0,5-1,8 · flecha 1,9 ---- */
+    const T_DRAW0 = 0.2;
+    const T_DRAW = 1.5;
+    const T_NUM0 = 0.5;
+    const T_NUM = 1.3;
+    const T_ARROW = 1.9;
+    const T_SETTLED = 3.4;
+    const T_MORPH = 0.7;
+
+    /* ---- estado ---- */
+    let key: SeriesKey = "mes";
+    let curve = buildCurve([...SERIES[key].data]);
+    let labels: readonly string[] = SERIES[key].labels;
+    let from: { ys: Float32Array; peakX: number; baseY: number; lo: number; hi: number } | null = null;
+    let morph = 1;
+    let hover: number | null = null;
+    let hoverX = 0;
+    let hoverMix = 0;
+    let started = reduce;
+    let clock = reduce ? 99 : 0;
+    let valueTo = Math.max(...SERIES[key].data);
+    let valueFrom = valueTo;
+    let valueT = 1;
+    let shown = 0;
+    let pulseStart = T_DRAW0 + T_DRAW * inverseEase((curve.peakX - X0) / (X1 - X0));
+    let raf = 0;
+    let last = performance.now();
+
+    const fmt = (v: number) => Math.round(v).toLocaleString("es-ES");
+
+    const frame = (dt: number) => {
+      if (started && !reduce) clock += dt;
+      const t = clock;
+
+      /* intro */
+      const draw = easeInOut((t - T_DRAW0) / T_DRAW);
+      const x1 = X0 + draw * (X1 - X0);
+      const dotA = smooth((t - T_DRAW0) / 0.2);
+      const dotS = backOut((t - T_DRAW0) / 0.4);
+      const numK = easeOut((t - T_NUM0) / T_NUM);
+      const arrowK = backOut((t - T_ARROW) / 0.45);
+
+      /* morph al cambiar de periodo */
+      if (morph < 1) morph = reduce ? 1 : Math.min(1, morph + dt / T_MORPH);
+      const mk = easeInOut(morph);
+      let ys = curve.ys;
+      let peakX = curve.peakX;
+      let baseY = curve.baseY;
+      let lo = curve.lo;
+      let hi = curve.hi;
+      if (from && morph < 1) {
+        ys = new Float32Array(W + 1);
+        for (let x = 0; x <= W; x++) ys[x] = from.ys[x] + (curve.ys[x] - from.ys[x]) * mk;
+        peakX = from.peakX + (curve.peakX - from.peakX) * mk;
+        baseY = from.baseY + (curve.baseY - from.baseY) * mk;
+        lo = from.lo + (curve.lo - from.lo) * mk;
+        hi = from.hi + (curve.hi - from.hi) * mk;
+      }
+
+      /* hover */
+      const landed = draw > 0.995 && dotA > 0.99;
+      const wantHover = hover !== null && landed;
+      if (hover !== null) hoverX = reduce ? hover : hoverX + (hover - hoverX) * (1 - Math.exp(-dt * 14));
+      const target = wantHover ? 1 : 0;
+      hoverMix = reduce ? target : hoverMix + (target - hoverMix) * (1 - Math.exp(-dt * 10));
+
+      /* número */
+      if (valueT < 1) valueT = reduce ? 1 : Math.min(1, valueT + dt / 0.9);
+      shown = (valueFrom + (valueTo - valueFrom) * easeOut(valueT)) * numK;
+      const txt = fmt(shown);
+      if (num.textContent !== txt) num.textContent = txt;
+      arrow.style.opacity = String(smooth((t - T_ARROW) / 0.18));
+      arrow.style.transform = `scale(${Math.max(0, arrowK).toFixed(3)})`;
+
+      /* línea y línea base */
+      line.setAttribute("d", pathFrom(ys, X0, Math.min(x1, X1)));
+      base.setAttribute("y1", baseY.toFixed(1));
+      base.setAttribute("y2", baseY.toFixed(1));
+      baseLabel.style.top = `${((baseY / H) * 100).toFixed(2)}%`;
+
+      /* punto: cabalga la punta del trazo, se posa en el pico y sigue al cursor */
+      const restX = peakX + 6;
+      const baseX = Math.min(x1, restX);
+      const dx = baseX + (hoverX - baseX) * hoverMix;
+      const dy = curveY(ys, dx);
+      dotG.setAttribute("transform", `translate(${dx.toFixed(1)} ${dy.toFixed(1)}) scale(${Math.max(0, dotS).toFixed(3)})`);
+      dotG.style.opacity = String(dotA);
+
+      /* onda plana al posarse (y tras cada cambio de periodo) */
+      const p = reduce ? -1 : (t - pulseStart) / 1.1;
+      if (p >= 0 && p <= 1) {
+        pulse.setAttribute("r", (9 + 22 * easeOut(p)).toFixed(1));
+        pulse.style.opacity = (0.6 * (1 - p) * (1 - p)).toFixed(3);
+      } else {
+        pulse.style.opacity = "0";
+      }
+
+      /* lectura al pasar el cursor */
+      tip.style.opacity = hoverMix.toFixed(3);
+      if (hoverMix > 0.01) {
+        const v = lo + ((BOTTOM - curveY(ys, dx)) / (BOTTOM - TOP)) * (hi - lo);
+        const idx = Math.round(((Math.max(X0, Math.min(X1, dx)) - X0) / (X1 - X0)) * (curve.n - 1));
+        const label = labels[idx] ?? "";
+        const text = `${Math.round(v)} llamadas`;
+        if (tipVal.textContent !== text) tipVal.textContent = text;
+        if (tipLab.textContent !== label) tipLab.textContent = label;
+        const px = Math.max(16, Math.min(84, (dx / W) * 100));
+        tip.style.left = `${px.toFixed(2)}%`;
+        tip.style.top = `${((dy / H) * 100).toFixed(2)}%`;
+        tip.style.transform = `translate(-50%, calc(-100% - 20px)) scale(${(0.94 + 0.06 * hoverMix).toFixed(3)})`;
+      }
+    };
+
+    const busy = () => {
+      if (!started) return false;
+      if (reduce) return morph < 1 || Math.abs(hoverMix - (hover !== null ? 1 : 0)) > 0.001;
+      return clock < T_SETTLED || morph < 1 || valueT < 1 || hover !== null || hoverMix > 0.001;
+    };
+    const tick = () => {
+      raf = 0;
+      const now = performance.now();
+      const dt = Math.min(0.1, Math.max(0, (now - last) / 1000));
+      last = now;
+      frame(dt);
+      if (!document.hidden && busy()) raf = requestAnimationFrame(tick);
+    };
+    const kick = () => {
+      if (!raf && !document.hidden) {
+        last = performance.now();
+        raf = requestAnimationFrame(tick);
+      }
+    };
+
+    /* ---- cambio de periodo ---- */
+    const setPeriod = (next: SeriesKey) => {
+      if (next === key) return;
+      // punto de partida del morph = lo que se ve ahora mismo
+      const mk = easeInOut(morph);
+      let ys = curve.ys;
+      let peakX = curve.peakX;
+      let baseY = curve.baseY;
+      let lo = curve.lo;
+      let hi = curve.hi;
+      if (from && morph < 1) {
+        ys = new Float32Array(W + 1);
+        for (let x = 0; x <= W; x++) ys[x] = from.ys[x] + (curve.ys[x] - from.ys[x]) * mk;
+        peakX = from.peakX + (curve.peakX - from.peakX) * mk;
+        baseY = from.baseY + (curve.baseY - from.baseY) * mk;
+        lo = from.lo + (curve.lo - from.lo) * mk;
+        hi = from.hi + (curve.hi - from.hi) * mk;
+      }
+      from = { ys, peakX, baseY, lo, hi };
+      key = next;
+      curve = buildCurve([...SERIES[key].data]);
+      labels = SERIES[key].labels;
+      morph = 0;
+      valueFrom = shown;
+      valueTo = Math.max(...SERIES[key].data);
+      valueT = 0;
+      pulseStart = clock + T_MORPH;
+      buttons.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.period === key)));
+      plot.setAttribute(
+        "aria-label",
+        `Gráfico de ejemplo con datos ficticios: llamadas desde la ficha. Punto más alto del periodo: ${valueTo}.`,
+      );
+      kick();
+    };
+    buttons.forEach((b) => b.addEventListener("click", () => setPeriod(b.dataset.period as SeriesKey)));
+
+    /* ---- puntero ---- */
+    const move = (e: PointerEvent) => {
+      const r = plot.getBoundingClientRect();
+      const x = Math.max(X0, Math.min(X1, ((e.clientX - r.left) / r.width) * W));
+      if (hover === null && hoverMix < 0.02) hoverX = x;
+      hover = x;
+      kick();
+    };
+    const leave = () => {
+      hover = null;
+      kick();
+    };
+    plot.addEventListener("pointermove", move);
+    plot.addEventListener("pointerdown", move);
+    plot.addEventListener("pointerleave", leave);
+    plot.addEventListener("pointercancel", leave);
+
+    /* ---- arranque: primer fotograma vacío y animación al entrar en pantalla ---- */
+    frame(0);
+    root.setAttribute("data-ready", "");
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) kick();
+    });
+    if (reduce) {
+      frame(0);
+    } else {
+      new IntersectionObserver(
+        (entries, io) => {
+          if (entries[0].isIntersecting) {
+            started = true;
+            io.disconnect();
+            kick();
+          }
+        },
+        { threshold: 0.35 },
+      ).observe(plot);
+    }
+  }
+</script>

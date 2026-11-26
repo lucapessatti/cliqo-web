@@ -1,0 +1,20 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Logo from "../components/Logo.astro";
+---
+
+<Layout title="Página no encontrada · Cliqo" description="Esta página no existe.">
+  <main class="mx-auto flex min-h-screen max-w-3xl flex-col justify-center px-5 py-16 sm:px-8">
+    <a href="/" class="mb-10 inline-block"><Logo tono="crema" clase="text-2xl" /></a>
+    <h1 class="titulo text-[clamp(2.5rem,9vw,5rem)] text-crema">Aquí no hay nada.</h1>
+    <p class="mt-6 max-w-md text-lg text-crema/85">
+      Esta página no existe o ha cambiado de sitio.
+    </p>
+    <a
+      href="/"
+      class="titulo mt-9 inline-block self-start rounded-lg bg-verde px-7 py-4 text-sm text-aubergine"
+    >
+      Volver al inicio
+    </a>
+  </main>
+</Layout>

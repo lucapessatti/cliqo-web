@@ -4,14 +4,14 @@ import { SHOW_PRICES } from "../config";
 
 const servicios = [
   {
-    nombre: "Mini-auditoría",
+    nombre: "Diagnóstico",
     gratis: true,
     texto: "Una revisión de tu ficha de Google con lo que vemos desde fuera.",
   },
   {
-    nombre: "Auditoría completa",
+    nombre: "Proyecto puntual",
     gratis: false,
-    texto: "Análisis de tu ficha, redes y números, con devolución y plan de acción.",
+    texto: "Datos, marketing digital o procesos: una mejora concreta, con objetivo y plazo.",
   },
   {
     nombre: "Acompañamiento mensual",
@@ -19,20 +19,28 @@ const servicios = [
     texto: "Seguimiento, medición y mejoras continuas.",
   },
 ];
+
+// Escalera: cada paso sube un peldaño (solo en pantallas anchas).
+const peldanos = ["md:mt-16", "md:mt-8", "md:mt-0"];
 ---
 
-<section class="bg-verde text-aubergine">
+<section data-section class="bg-verde text-aubergine">
   <div class="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
     <Diana clase="h-8 w-8 text-aubergine" />
 
-    <h2 class="titulo mt-7 max-w-3xl text-[clamp(2rem,6vw,4rem)]">
+    <h2 data-reveal class="titulo mt-7 max-w-3xl text-[clamp(2rem,6vw,4rem)]">
       Por dónde empezar.
     </h2>
 
+    <!-- Capítulo 6: por dónde empezar, como una escalera que sube. -->
     <div class="mt-12 grid gap-4 md:grid-cols-3">
       {
-        servicios.map((s) => (
-          <div class="flex flex-col rounded-xl bg-aubergine p-7 text-crema">
+        servicios.map((s, i) => (
+          <div
+            data-reveal
+            class={`flex flex-col rounded-xl bg-aubergine p-7 text-crema ${peldanos[i]}`}
+            style={`--d: ${i * 130}ms`}
+          >
             <div class="flex items-center gap-3">
               <h3 class="titulo text-xl">{s.nombre}</h3>
               {s.gratis && (
@@ -50,7 +58,7 @@ const servicios = [
       }
     </div>
 
-    <p class="mt-10 text-lg font-semibold">
+    <p data-reveal style="--d: 300ms" class="mt-10 text-lg font-semibold">
       Precio tras una llamada de 15 minutos.
     </p>
   </div>

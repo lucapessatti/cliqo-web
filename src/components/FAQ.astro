@@ -4,12 +4,11 @@ import Diana from "./Diana.astro";
 const preguntas = [
   {
     q: "¿Cuánto cuesta?",
-    a: "La mini-auditoría es gratis. La auditoría y el acompañamiento se presupuestan después de una llamada de 15 minutos.",
+    a: "El diagnóstico es gratis. Los proyectos y el acompañamiento se presupuestan después de una llamada de 15 minutos.",
   },
   {
     q: "¿Cuánto tardáis?",
-    // TODO: confirmar plazo real de entrega de la mini-auditoría.
-    a: "La mini-auditoría te la devolvemos en pocos días.",
+    a: "El diagnóstico te lo devolvemos en un máximo de 3 días laborables.",
   },
   {
     q: "No tengo tiempo.",
@@ -30,21 +29,25 @@ const preguntas = [
 ];
 ---
 
-<section class="bg-aubergine text-crema">
+<section data-section class="bg-aubergine text-crema">
   <div class="mx-auto max-w-3xl px-5 py-20 sm:px-8 sm:py-28">
     <Diana clase="h-8 w-8 text-verde" />
 
-    <h2 class="titulo mt-7 text-[clamp(2rem,6vw,4rem)] text-crema">
+    <h2 data-reveal class="titulo mt-7 text-[clamp(2rem,6vw,4rem)] text-crema">
       Preguntas frecuentes.
     </h2>
 
     <div class="mt-10">
       {
-        preguntas.map((p) => (
-          <details class="group border-t border-crema/15 py-5">
+        preguntas.map((p, i) => (
+          <details
+            data-reveal
+            class="group border-t border-crema/15 py-5"
+            style={`--d: ${i * 60}ms`}
+          >
             <summary class="flex cursor-pointer list-none items-center justify-between gap-4 text-lg font-bold text-crema">
               {p.q}
-              <span class="shrink-0 text-verde transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+              <span class="shrink-0 text-verde transition-transform duration-200 ease-out group-open:rotate-45" aria-hidden="true">+</span>
             </summary>
             <p class="mt-3 max-w-xl leading-relaxed text-crema/80">{p.a}</p>
           </details>

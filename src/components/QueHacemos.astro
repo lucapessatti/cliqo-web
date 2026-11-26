@@ -1,39 +1,173 @@
 ---
 import Diana from "./Diana.astro";
-
-const lineas = [
-  {
-    nombre: "Datos",
-    texto: "Auditorías, procesos y digitalización.",
-  },
-  {
-    nombre: "Imagen",
-    texto: "Contenido, redes y estrategia visual.",
-  },
-];
 ---
 
-<section id="que-hacemos" class="bg-verde text-aubergine">
+<section id="que-hacemos" data-section class="bg-verde text-aubergine">
   <div class="mx-auto max-w-6xl px-5 py-20 sm:px-8 sm:py-28">
     <Diana clase="h-8 w-8 text-aubergine" />
 
-    <h2 class="titulo mt-7 max-w-3xl text-[clamp(2rem,6vw,4rem)]">
-      Dos líneas, un objetivo.
+    <h2 data-reveal class="titulo mt-7 max-w-3xl text-[clamp(2rem,6vw,4rem)]">
+      Tres líneas, un objetivo.
     </h2>
 
-    <div class="mt-12 grid gap-y-10 sm:grid-cols-2 sm:gap-x-12">
-      {
-        lineas.map((l) => (
-          <div class="border-t-2 border-aubergine/40 pt-5">
-            <h3 class="titulo text-2xl">{l.nombre}</h3>
-            <p class="mt-3 max-w-sm text-lg font-semibold leading-relaxed">{l.texto}</p>
-          </div>
-        ))
-      }
+    <!-- Capítulo 3: medimos (barras), lo contamos bien (marco) y lo ponemos en marcha (nodos). -->
+    <div class="mt-12 grid gap-y-10 sm:grid-cols-3 sm:gap-x-10">
+      <div
+        class="col border-t-2 border-aubergine/40 pt-5"
+        data-reveal
+        data-story
+        style="--d: 0ms"
+      >
+        <svg class="mb-4 h-14 w-14" viewBox="0 0 64 64" aria-hidden="true">
+          <rect class="bar b1" x="6" y="40" width="10" height="16" rx="2" />
+          <rect class="bar b2" x="20" y="28" width="10" height="28" rx="2" />
+          <rect class="bar b3" x="34" y="34" width="10" height="22" rx="2" />
+          <rect class="bar b4" x="48" y="14" width="10" height="42" rx="2" />
+        </svg>
+        <h3 class="titulo text-2xl">Datos</h3>
+        <p class="mt-3 max-w-sm text-lg font-semibold leading-relaxed">
+          Tus números ordenados en un panel sencillo: qué se vende, cuándo y a quién.
+        </p>
+      </div>
+
+      <div
+        class="col border-t-2 border-aubergine/40 pt-5"
+        data-reveal
+        data-story
+        style="--d: 120ms"
+      >
+        <svg class="mb-4 h-14 w-14" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <rect class="frame" x="6" y="10" width="52" height="44" rx="6" pathLength="1" />
+          <circle class="sun" cx="22" cy="26" r="5" />
+          <polyline class="hill" points="10,50 26,34 36,44 44,36 54,50" pathLength="1" />
+        </svg>
+        <h3 class="titulo text-2xl">Marketing</h3>
+        <p class="mt-3 max-w-sm text-lg font-semibold leading-relaxed">
+          Ficha de Google, redes y contenido con buena imagen.
+        </p>
+      </div>
+
+      <div
+        class="col border-t-2 border-aubergine/40 pt-5"
+        data-reveal
+        data-story
+        style="--d: 240ms"
+      >
+        <svg class="mb-4 h-14 w-14" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+          <path class="lnk l1" d="M17 43.2 L29 19.8" pathLength="1" />
+          <path class="lnk l2" d="M35 20.2 L47 43.8" pathLength="1" />
+          <path class="lnk l3" d="M20.5 49 H43.5" pathLength="1" />
+          <circle class="nd n1" cx="14" cy="49" r="6" />
+          <circle class="nd n2" cx="32" cy="14" r="6" />
+          <circle class="nd n3" cx="50" cy="49" r="6" />
+        </svg>
+        <h3 class="titulo text-2xl">Procesos</h3>
+        <p class="mt-3 max-w-sm text-lg font-semibold leading-relaxed">
+          Menos tareas repetitivas: recordatorios, respuestas e informes automáticos.
+        </p>
+      </div>
     </div>
 
-    <p class="titulo mt-14 max-w-2xl text-2xl sm:text-3xl">
-      Que te encuentren y que te elijan.
+    <p data-reveal data-story class="closing titulo mt-14 max-w-2xl text-2xl sm:text-3xl">
+      <span class="underline-draw">Que te encuentren y que te elijan.</span>
     </p>
   </div>
 </section>
+
+<style>
+  /* Barras de «Datos»: crecen desde la base, escalonadas. */
+  .bar {
+    fill: #351e28;
+    transform-box: fill-box;
+    transform-origin: bottom;
+  }
+  :global(html.js) .col:not(.in) .bar {
+    transform: scaleY(0);
+  }
+  .col .bar {
+    transition: transform 600ms var(--ease-out);
+  }
+  .col.in .b1 { transition-delay: 300ms; }
+  .col.in .b2 { transition-delay: 390ms; }
+  .col.in .b3 { transition-delay: 480ms; }
+  .col.in .b4 { transition-delay: 570ms; }
+
+  /* Marco de «Marketing»: se dibuja, sale el sol y el paisaje. */
+  .frame,
+  .hill,
+  .lnk {
+    stroke: #351e28;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+  }
+  .frame { stroke-width: 5; }
+  .hill { stroke-width: 4; stroke-linecap: round; }
+  .sun,
+  .nd {
+    fill: #351e28;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  :global(html.js) .col:not(.in) .frame,
+  :global(html.js) .col:not(.in) .hill,
+  :global(html.js) .col:not(.in) .lnk {
+    stroke-dashoffset: 1;
+  }
+  :global(html.js) .col:not(.in) .sun,
+  :global(html.js) .col:not(.in) .nd {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  .col .frame { transition: stroke-dashoffset 700ms var(--ease-out) 300ms; }
+  .col .hill { transition: stroke-dashoffset 600ms var(--ease-out) 700ms; }
+  .col .sun {
+    transition:
+      opacity 300ms var(--ease-out) 900ms,
+      transform 400ms var(--ease-out) 900ms;
+  }
+
+  /* Nodos y enlaces de «Procesos»: los puntos aparecen y se conectan uno a uno. */
+  .col .nd {
+    transition:
+      opacity 300ms var(--ease-out),
+      transform 400ms var(--ease-out);
+  }
+  .col.in .n1 { transition-delay: 300ms; }
+  .col.in .n2 { transition-delay: 450ms; }
+  .col.in .n3 { transition-delay: 600ms; }
+  .lnk { stroke-width: 4; stroke-linecap: round; }
+  .col .lnk { transition: stroke-dashoffset 450ms var(--ease-out); }
+  .col.in .l1 { transition-delay: 450ms; }
+  .col.in .l2 { transition-delay: 600ms; }
+  .col.in .l3 { transition-delay: 750ms; }
+
+  /* Subrayado de la frase final: se dibuja de izquierda a derecha. */
+  /* Interlineado holgado para que el subrayado de una línea no pise la siguiente. */
+  .closing.titulo {
+    line-height: 1.35;
+  }
+  .underline-draw {
+    background-image: linear-gradient(#351e28, #351e28);
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 100% 3px;
+    padding-bottom: 0.14em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    transition: background-size 700ms var(--ease-out) 250ms;
+  }
+  :global(html.js) .closing:not(.in) .underline-draw {
+    background-size: 0% 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .col .bar,
+    .col .frame,
+    .col .hill,
+    .col .sun,
+    .col .nd,
+    .col .lnk,
+    .underline-draw { transition-duration: 0ms; transition-delay: 0ms !important; }
+  }
+</style>
