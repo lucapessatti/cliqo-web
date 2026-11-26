@@ -10,7 +10,7 @@ import { EMAIL, ASUNTO_CONTACTO } from "../config";
 
 <Layout
   title="Pide tu diagnóstico gratis · Cliqo"
-  description="Cuéntanos tu negocio y qué te preocupa. Te respondemos con tu diagnóstico gratis en un máximo de 3 días laborables."
+  description="Cuéntanos tu negocio y qué te preocupa. Te respondemos en un máximo de 48 horas."
 >
   <main class="mx-auto max-w-3xl px-5 py-12 sm:px-8 sm:py-20">
     <a href="/" class="mb-10 inline-block"><Logo tono="crema" clase="text-2xl" /></a>
@@ -19,7 +19,7 @@ import { EMAIL, ASUNTO_CONTACTO } from "../config";
       Pide tu diagnóstico gratis
     </h1>
     <p class="mt-5 max-w-xl text-lg leading-relaxed text-crema/85">
-      Cuéntanos qué negocio tienes y qué te preocupa. Te respondemos en un máximo de 3 días laborables.
+      Cuéntanos qué negocio tienes y qué te preocupa. Te respondemos en un máximo de 48 horas.
     </p>
 
     <!-- Estado del envío (lo rellena el script; también se abre con ?ok=1 o ?error=1 si el navegador envió sin JavaScript) -->
@@ -197,7 +197,7 @@ import { EMAIL, ASUNTO_CONTACTO } from "../config";
     // Si el navegador envió el formulario sin JavaScript, el Worker redirige con ?ok=1 o ?error=1.
     const params = new URLSearchParams(location.search);
     if (params.get("ok")) {
-      mostrar("ok", "Gracias. Hemos recibido tu mensaje y te respondemos en un máximo de 3 días laborables.");
+      mostrar("ok", "Gracias. Hemos recibido tu mensaje y te respondemos en un máximo de 48 horas.");
     } else if (params.get("error")) {
       mostrar("error", `No hemos podido enviarlo. Escríbenos a <a href="mailto:${EMAIL}">${EMAIL}</a> y te respondemos igual.`);
     }
@@ -216,7 +216,7 @@ import { EMAIL, ASUNTO_CONTACTO } from "../config";
         const data = await res.json().catch(() => ({}));
         if (!res.ok || !data.ok) throw new Error("envio");
         form.reset();
-        mostrar("ok", "Gracias. Hemos recibido tu mensaje y te respondemos en un máximo de 3 días laborables.");
+        mostrar("ok", "Gracias. Hemos recibido tu mensaje y te respondemos en un máximo de 48 horas.");
       } catch {
         mostrar("error", errorHtml());
       } finally {

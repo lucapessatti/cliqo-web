@@ -45,7 +45,7 @@ Pruebas de la lógica (fuera de Cloudflare): `worker/contact.ts` y `worker/mime.
 Decisiones ya tomadas (26/11/2026):
 - WhatsApp **no se muestra** en la web; solo lo usa Luca cuando contacta primero.
 - Instagram: `@cliqo.es`.
-- Plazo del diagnóstico: máximo 3 días laborables (FAQ y formulario).
+- Plazos: respondemos al formulario en un máximo de 48 horas (página de contacto) y el diagnóstico se devuelve en un máximo de 3 días laborables (FAQ).
 
 ## Estructura
 
