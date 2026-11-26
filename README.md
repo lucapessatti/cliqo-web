@@ -39,7 +39,6 @@ Pruebas de la lógica (fuera de Cloudflare): `worker/contact.ts` y `worker/mime.
 
 ## Pendiente tras publicar
 
-- Secreto `CONTACT_TO` en Cloudflare (ver arriba) y un envío de prueba desde `/contacto`.
 - Revisión de `/aviso-legal` y `/privacidad` por un gestor. Los datos del titular están en `src/config.ts` (`TITULAR`).
 
 Decisiones ya tomadas (26/11/2026):
